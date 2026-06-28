@@ -13,6 +13,7 @@ const DEFAULT_DURATION_INDEX = 3;
 const POINT_STEP = 0.25;
 const MIN_POINTS = 1;
 const MAX_POINTS = 20;
+const TOTAL_EXERCISE_HEIGHT = 986;
 
 const clamp = (value, min, max) => Math.min(Math.max(Number(value), min), max);
 
@@ -172,10 +173,9 @@ function App() {
   };
 
   const getExerciseHeights = () => {
-    const totalHeight = 986;
     const minSmallHeight = 150;
     const firstHeight = 350 + exercises[0].size;
-    const remaining = totalHeight - firstHeight;
+    const remaining = TOTAL_EXERCISE_HEIGHT - firstHeight;
     const balance = exercises[1].size - exercises[2].size;
     const secondHeight = clamp(Math.round(remaining / 2 + balance), minSmallHeight, remaining - minSmallHeight);
     const thirdHeight = remaining - secondHeight;
@@ -184,6 +184,7 @@ function App() {
   };
 
   const exerciseHeights = getExerciseHeights();
+  const getHeightPercentage = (height) => Math.round((height / TOTAL_EXERCISE_HEIGHT) * 100);
 
   const handleExerciseImage = (id, file) => {
     if (!file || !file.type.startsWith('image/')) return;
@@ -332,7 +333,7 @@ function App() {
                 value={exercise.size}
                 onChange={(e) => updateSize(exercise.id, e.target.value, index)}
               />
-              <small>Hauteur actuelle : {exerciseHeights[index]} px</small>
+              <small>Hauteur actuelle : {getHeightPercentage(exerciseHeights[index])} %</small>
             </div>
 
             <label>Photo pour {exercise.title}</label>
