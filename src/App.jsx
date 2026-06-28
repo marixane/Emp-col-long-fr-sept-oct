@@ -9,6 +9,7 @@ const DEFAULT_EXERCISES = [
 ];
 
 const DURATION_OPTIONS = ['30 min', '1 h', '1 h 30', '2 h', '2 h 30', '3 h'];
+const DEFAULT_DURATION_INDEX = 3;
 
 const clamp = (value, min, max) => Math.min(Math.max(Number(value), min), max);
 
@@ -23,12 +24,20 @@ const getTitleFontSize = (text) => {
 
 function App() {
   const [studentLevel, setStudentLevel] = useState('2 Bac SPF');
-  const [duration, setDuration] = useState('2 h');
+  const [durationIndex, setDurationIndex] = useState(DEFAULT_DURATION_INDEX);
   const [testTitle, setTestTitle] = useState('Devoir individuel de Mathématique N°: 1 Semestre: 1 Lycée El Jamai, Tanger');
   const [exercises, setExercises] = useState(DEFAULT_EXERCISES);
   const [isExporting, setIsExporting] = useState(false);
   const [dragState, setDragState] = useState(null);
   const pageRef = useRef(null);
+
+  const duration = DURATION_OPTIONS[durationIndex];
+
+  const changeDuration = (step) => {
+    setDurationIndex((currentIndex) =>
+      clamp(currentIndex + step, 0, DURATION_OPTIONS.length - 1)
+    );
+  };
 
   const updateExercise = (id, field, value) => {
     setExercises((items) =>
@@ -162,7 +171,7 @@ function App() {
         <p className="eyebrow">A4 Exam Maker</p>
         <h1>Créer une feuille A4 avec entête fixe</h1>
         <p className="intro">
-          La durée est choisie dans une liste fixe. Par défaut : 2 h.
+          La durée se règle avec les boutons - et +. Par défaut : 2 h.
         </p>
 
         <div className="form-group">
@@ -172,11 +181,25 @@ function App() {
 
         <div className="form-group">
           <label>Durée</label>
-          <select value={duration} onChange={(e) => setDuration(e.target.value)}>
-            {DURATION_OPTIONS.map((option) => (
-              <option key={option} value={option}>{option}</option>
-            ))}
-          </select>
+          <div className="duration-control">
+            <button
+              type="button"
+              onClick={() => changeDuration(-1)}
+              disabled={durationIndex === 0}
+              aria-label="Diminuer la durée"
+            >
+              −
+            </button>
+            <strong>{duration}</strong>
+            <button
+              type="button"
+              onClick={() => changeDuration(1)}
+              disabled={durationIndex === DURATION_OPTIONS.length - 1}
+              aria-label="Augmenter la durée"
+            >
+              +
+            </button>
+          </div>
         </div>
 
         <div className="form-group">
