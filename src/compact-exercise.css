@@ -135,11 +135,15 @@
 
 .exam-page.is-exporting .photo-overlay-tools,
 .exam-page.is-exporting .mask-delete-button,
-.exam-page.is-exporting .mask-resize-handle {
-  display: none;
+.exam-page.is-exporting .mask-resize-handle,
+.html2canvas-container .photo-overlay-tools,
+.html2canvas-container .mask-delete-button,
+.html2canvas-container .mask-resize-handle {
+  display: none !important;
 }
 
-.exam-page.is-exporting .white-mask {
-  border: 0;
-  box-shadow: none;
+.exam-page.is-exporting .white-mask,
+.html2canvas-container .white-mask {
+  border: 0 !important;
+  box-shadow: none !important;
 }
