@@ -214,16 +214,16 @@
 }
 
 .exam-page.has-bar-ribbon .exam-exercise {
-  padding-left: 4px !important;
+  padding-left: 0 !important;
 }
 
 .exam-page.has-bar-ribbon .exercise-body::before {
   content: '';
   position: absolute;
-  left: -3px;
+  left: -6px;
   top: 0;
   bottom: 0;
-  width: 30px;
+  width: 33px;
   border-left: 2px solid rgba(120, 120, 120, 0.42);
   border-right: 2px solid rgba(120, 120, 120, 0.42);
   background: linear-gradient(to right, rgba(150, 150, 150, 0.03), rgba(150, 150, 150, 0.15), rgba(150, 150, 150, 0.03));
