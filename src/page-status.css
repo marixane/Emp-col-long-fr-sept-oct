@@ -216,7 +216,7 @@
 .exam-page.has-bar-ribbon .exercise-body::before {
   content: '';
   position: absolute;
-  left: 1px;
+  left: -4px;
   top: 0;
   bottom: 0;
   width: 27px;
