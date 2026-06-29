@@ -37,6 +37,8 @@ import './hide-single-page-number.js';
 import './page-count-singular.js';
 import './points-label-pts.js';
 import './clear-toggle-icons.css';
+import './menu-title-reglages.css';
+import './menu-title-reglages.js';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
