@@ -80,10 +80,8 @@
 }
 
 .page-count-card .compact-control strong::after {
-  content: 'Exs' !important;
-  display: inline-block !important;
-  margin-left: 4px !important;
-  font-size: 11px !important;
+  content: '' !important;
+  display: none !important;
 }
 
 .pdf-lines-toggle,
