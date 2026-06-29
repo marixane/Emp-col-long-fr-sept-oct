@@ -21,6 +21,7 @@ import './compact-side-menu.css';
 import './homework-hide-ribbon.js';
 import './points-buttons-hitbox.css';
 import './clear-bar-marks-on-exercise-count.js';
+import './narrow-side-menu.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
