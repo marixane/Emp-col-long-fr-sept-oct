@@ -41,6 +41,7 @@ import './menu-title-reglages.css';
 import './menu-title-reglages.js';
 import './export-pdf-clear.css';
 import './export-pdf-clear.js';
+import './discreet-exercise-points.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
