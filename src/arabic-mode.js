@@ -9,7 +9,10 @@ const FR_HEADER = {
   rightBottom: 'N° : 1 Semestre : 1'
 };
 
-const AR_HEADER = { ...FR_HEADER };
+const AR_HEADER = {
+  ...FR_HEADER,
+  rightTop: 'ثانوية الجامعي، طنجة'
+};
 
 function setInputValue(selector, value) {
   var input = document.querySelector(selector);
