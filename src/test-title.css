@@ -51,7 +51,7 @@ body,
 
 .page-number {
   position: absolute;
-  left: 18px;
+  right: 18px;
   bottom: 10px;
   font-size: 13px;
   font-weight: 700;
