@@ -61,6 +61,31 @@ body.arabic-mode .exam-page .exercise-title {
   right: 12px !important;
 }
 
+body.arabic-mode .exercise-title-controls {
+  direction: rtl !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+body.arabic-mode .exercise-title-controls > span:first-child {
+  order: 1 !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  text-align: right !important;
+}
+
+body.arabic-mode .exercise-title-controls .exercise-point-control,
+body.arabic-mode .exercise-title-controls .points-control,
+body.arabic-mode .exercise-title-controls .compact-control,
+body.arabic-mode .exercise-title-controls > span:not(:first-child) {
+  order: 2 !important;
+  margin-right: auto !important;
+  margin-left: 0 !important;
+}
+
 body.arabic-mode .photo-overlay-tools {
   right: auto !important;
   left: 8px !important;
