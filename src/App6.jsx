@@ -4,7 +4,6 @@ import jsPDF from 'jspdf';
 
 const MAX_PAGES = 6;
 const MAX_EX = 6;
-const TOTAL = 20;
 const H1 = 990;
 const HN = 840;
 const MIN_H = 120;
@@ -38,17 +37,16 @@ const fmt = (v) => {
   const n = Math.round(Number(v) * 100) / 100;
   return `${Number.isInteger(n) ? n : String(n).replace('.', ',')} ${n === 1 ? 'Point' : 'Points'}`;
 };
-const pts = (n) => {
+const pts = (n, total = 20) => {
   if (!n) return [];
-  if (n === 3) return [7, 7, 6];
-  const base = Math.round((TOTAL / n) / 0.25) * 0.25;
+  const base = Math.round((total / n) / 0.25) * 0.25;
   const arr = Array.from({ length: n }, () => base);
-  arr[n - 1] = Math.round((arr[n - 1] + TOTAL - arr.reduce((s, x) => s + x, 0)) * 100) / 100;
+  arr[n - 1] = Math.round((arr[n - 1] + total - arr.reduce((s, x) => s + x, 0)) * 100) / 100;
   return arr;
 };
 const ex = (i, p = 5) => ({ id: `${Date.now()}-${i}-${Math.random()}`, points: p, image: null, zoom: 100, x: 0, y: 0, masks: [], barMarks: [] });
 const blankEx = () => ({ ...ex(0, 0), blank: true });
-const exs = (n) => pts(n).map((p, i) => ex(i, p));
+const exs = (n, total = 20) => pts(n, total).map((p, i) => ex(i, p));
 const heights = (n, h) => n ? Array.from({ length: n }, (_, i) => i === n - 1 ? h - Math.floor(h / n) * (n - 1) : Math.floor(h / n)) : [];
 const visibleCount = (p) => p.filter((e) => !e.blank).length;
 const barPointValue = (label) => Number(String(label ?? '').replace('p', '').replace(',', '.')) || 0;
@@ -63,9 +61,9 @@ export default function App6() {
   const [rightBottom, setRightBottom] = useState(RIGHT_TITLE_BOTTOM);
   const [level, setLevel] = useState('Classe : 2 Bac SPF');
   const [duration, setDuration] = useState(3);
-  const [pages, setPages] = useState([exs(2), ...Array.from({ length: MAX_PAGES - 1 }, () => [])]);
+  const [noteTotal, setNoteTotal] = useState(20);
+  const [pages, setPages] = useState([exs(2, 20), ...Array.from({ length: MAX_PAGES - 1 }, () => [])]);
   const [hs, setHs] = useState([heights(2, H1), ...Array.from({ length: MAX_PAGES - 1 }, () => [])]);
-  const [totalLocked, setTotalLocked] = useState(true);
   const [pdfLines, setPdfLines] = useState(true);
   const [barRibbon, setBarRibbon] = useState(true);
   const [exporting, setExporting] = useState(false);
@@ -97,17 +95,17 @@ export default function App6() {
       } : m),
     } : e) : p));
   };
-  const balance = (next) => {
+  const balance = (next, targetTotal = noteTotal) => {
     const pos = next.flatMap((p, pi) => p.map((item, ei) => item.blank ? null : { pi, ei }).filter(Boolean));
-    const p = pts(pos.length);
+    const p = pts(pos.length, targetTotal);
     return next.map((page, pi) => page.map((item, ei) => {
       if (item.blank) return item;
-      return { ...item, masks: item.masks ?? [], barMarks: item.barMarks ?? [], points: p[pos.findIndex((x) => x.pi === pi && x.ei === ei)] ?? item.points };
+      return { ...item, masks: item.masks ?? [], barMarks: [], points: p[pos.findIndex((x) => x.pi === pi && x.ei === ei)] ?? item.points };
     }));
   };
-  const changeTotalLock = (checked) => {
-    setTotalLocked(checked);
-    if (checked) setPages((cur) => balance(cur));
+  const changeNoteTotal = (targetTotal) => {
+    setNoteTotal(targetTotal);
+    setPages((cur) => balance(cur, targetTotal));
   };
   const setCount = (page, d) => {
     if (page > 0 && d > 0 && visibleCount(pages[0]) === 0) return;
@@ -119,9 +117,9 @@ export default function App6() {
         if (i !== page) return p;
         if (n === 0 && page === 0) return p.length === 1 && p[0]?.blank ? p : [blankEx()];
         const real = p.filter((item) => !item.blank);
-        return Array.from({ length: n }, (_, j) => real[j] ? { ...real[j], masks: real[j].masks ?? [], barMarks: real[j].barMarks ?? [] } : ex(j));
+        return Array.from({ length: n }, (_, j) => real[j] ? { ...real[j], masks: real[j].masks ?? [], barMarks: [] } : ex(j));
       });
-      return totalLocked ? balance(next) : next;
+      return balance(next, noteTotal);
     });
     setHs((cur) => cur.map((p, i) => {
       if (n === 0 && i > page) return [];
@@ -139,25 +137,20 @@ export default function App6() {
     const current = pages[page][index];
     if (!current || current.blank) return false;
     const next = Math.round((current.points + d * 0.25) * 100) / 100;
-    if (!totalLocked) return next >= 1 && next <= 20;
     const peer = pointPeer(page, index);
     if (!peer) return false;
     const peerNext = Math.round((peer.e.points - d * 0.25) * 100) / 100;
-    return next >= 1 && next <= 20 && peerNext >= 1 && peerNext <= 20;
+    return next >= 0.25 && next <= noteTotal && peerNext >= 0.25 && peerNext <= noteTotal;
   };
   const changePoint = (page, index, d) => {
     if (!canChangePoint(page, index, d)) return;
-    if (!totalLocked) {
-      setPages((cur) => cur.map((p, pi) => p.map((e, ei) => pi === page && ei === index ? { ...e, points: Math.round((e.points + d * 0.25) * 100) / 100 } : e)));
-      return;
-    }
     const peer = pointPeer(page, index);
     if (!peer) return;
     const a = pages[page][index].points + d * 0.25;
     const b = peer.e.points - d * 0.25;
     setPages((cur) => cur.map((p, pi) => p.map((e, ei) => {
-      if (pi === page && ei === index) return { ...e, points: Math.round(a * 100) / 100 };
-      if (pi === peer.page && ei === peer.index) return { ...e, points: Math.round(b * 100) / 100 };
+      if (pi === page && ei === index) return { ...e, barMarks: [], points: Math.round(a * 100) / 100 };
+      if (pi === peer.page && ei === peer.index) return { ...e, barMarks: [], points: Math.round(b * 100) / 100 };
       return e;
     })));
   };
@@ -278,7 +271,7 @@ export default function App6() {
     <section className="panel">
       <p className="eyebrow">A4 Exam Maker</p><h1>Créer une feuille A4 avec entête fixe</h1><p className="intro">Choisis le type de devoir, puis le nombre d’exercices par page.</p>
       <div className="form-group"><label>Type de devoir</label><div className="duration-control compact-control assignment-control"><button onClick={() => { setKind('individual'); setTitleTop(IND_TITLE_TOP); }} disabled={kind === 'individual'}>Individuel</button><button onClick={() => { setKind('homework'); setTitleTop(HOME_TITLE_TOP); }} disabled={kind === 'homework'}>À la maison</button></div></div>
-      {kind !== 'homework' && <><label className="total-mode-control"><input type="checkbox" checked={totalLocked} onChange={(ev) => changeTotalLock(ev.target.checked)} />{totalLocked ? 'Total bloqué : ' : 'Total libre : '}{fmt(total)}</label><p className={`points-total ${totalLocked ? 'locked' : 'free'}`}>{totalLocked ? 'Total général bloqué : ' : 'Total général libre : '}{fmt(total)}</p></>}
+      {kind !== 'homework' && <div className="note-scale-control"><div className="note-scale-title">Notes :</div><div className="note-scale-buttons"><button type="button" className={`note-scale-button ${noteTotal === 10 ? 'active' : ''}`} onClick={() => changeNoteTotal(10)}>Sur 10</button><button type="button" className={`note-scale-button ${noteTotal === 20 ? 'active' : ''}`} onClick={() => changeNoteTotal(20)}>Sur 20</button></div><div className="note-scale-counter">Total : {fmt(total)} / {noteTotal}</div></div>}
       <button type="button" className={`pdf-lines-toggle ${pdfLines ? 'on' : 'off'}`} onClick={() => setPdfLines((v) => !v)}>{pdfLines ? 'Lignes visibles dans le PDF' : 'Lignes masquées dans le PDF'}</button>
       <button type="button" className={`bar-ribbon-toggle ${barRibbon ? 'on' : 'off'}`} onClick={() => setBarRibbon((v) => !v)}>{barRibbon ? 'Ruban de barème visible' : 'Ruban de barème masqué'}</button>
       <section className="exercise-count-section"><h2>Nombre d’exercices</h2><div className="page-count-grid">{countPages.map(({ p, i }) => <div className="page-count-card" key={i}><label>Page {i + 1}</label><div className="duration-control compact-control"><button onClick={() => setCount(i, -1)} disabled={visibleCount(p) === 0}>−</button><strong>{visibleCount(p)}</strong><button onClick={() => setCount(i, 1)} disabled={visibleCount(p) === MAX_EX || (i > 0 && visibleCount(pages[0]) === 0)}>+</button></div></div>)}</div></section>
