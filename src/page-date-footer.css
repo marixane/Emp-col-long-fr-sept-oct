@@ -61,3 +61,33 @@ body.hide-page-date .page-date {
     linear-gradient(to bottom, transparent 0 16px, #9ca3af 16px 17px, transparent 17px 24px, #9ca3af 24px 25px, transparent 25px 32px, #9ca3af 32px 33px, transparent 33px),
     #ffffff;
 }
+
+.page-date-control {
+  display: block !important;
+  width: 100% !important;
+  margin-top: 4px !important;
+  padding: 6px !important;
+  border-radius: 9px !important;
+  background: #ffffff !important;
+  border: 1px solid #d1d5db !important;
+  color: #374151 !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  line-height: 1.1 !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08) !important;
+}
+
+.page-date-input {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: 28px !important;
+  min-height: 28px !important;
+  margin-top: 4px !important;
+  padding: 3px 5px !important;
+  border: 1px solid #9ca3af !important;
+  border-radius: 6px !important;
+  background: #f9fafb !important;
+  color: #111827 !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+}
