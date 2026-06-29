@@ -1,6 +1,6 @@
 .exam-page:not(.second-page) .exercise-list {
   overflow: visible !important;
-  padding-top: 1px !important;
+  padding-top: 0 !important;
 }
 
 .exam-page:not(.second-page) .exam-exercise:first-child {
@@ -12,13 +12,6 @@
 }
 
 .exam-page:not(.second-page) .exam-exercise:first-child::before {
-  content: '';
-  position: absolute;
-  left: -2px;
-  right: -2px;
-  top: 0;
-  height: 2px;
-  background: #111111;
-  z-index: 120;
-  pointer-events: none;
+  display: none !important;
+  content: none !important;
 }
