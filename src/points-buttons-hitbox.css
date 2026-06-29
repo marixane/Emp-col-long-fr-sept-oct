@@ -1,6 +1,6 @@
 .exercise-title-controls button::after {
-  inset: -10px -15px -17px -15px !important;
-  transform: translateY(3px) !important;
+  inset: -9px -17px -24px -17px !important;
+  transform: translateY(5px) !important;
 }
 
 .exercise-title-controls button:not(:disabled),
