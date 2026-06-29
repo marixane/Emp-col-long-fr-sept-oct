@@ -1,6 +1,6 @@
 .exercise-title-controls {
   display: inline-grid !important;
-  grid-template-columns: auto auto 22px 78px 10px 22px !important;
+  grid-template-columns: auto auto 22px 64px 10px 22px !important;
   align-items: center !important;
   column-gap: 3px !important;
 }
@@ -80,9 +80,9 @@
 }
 
 .exercise-title-controls strong {
-  width: 78px !important;
-  min-width: 78px !important;
-  max-width: 78px !important;
+  width: 64px !important;
+  min-width: 64px !important;
+  max-width: 64px !important;
   padding: 0 !important;
   color: #111111 !important;
   font-size: 13px !important;
