@@ -47,6 +47,13 @@
   line-height: 16px !important;
 }
 
+.bar-buttons button:disabled {
+  opacity: 0.28 !important;
+  cursor: not-allowed !important;
+  background: #e5e7eb !important;
+  color: #999 !important;
+}
+
 .exam-page.is-exporting .bar-buttons {
   display: none !important;
 }
