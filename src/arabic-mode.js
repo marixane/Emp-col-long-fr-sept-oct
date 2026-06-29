@@ -1,16 +1,10 @@
 window.__examLanguage = window.__examLanguage || localStorage.getItem('examLanguage') || 'fr';
 
 const FR_HEADER = {
-  level: 'Classe : 2 Bac SPF',
-  titleTop: 'Devoir individuel',
-  titleMiddle: 'Mathématique',
-  titleBottom: '',
-  rightTop: 'Lycée El jamai ,Tanger',
-  rightBottom: 'N° : 1 Semestre : 1'
+  rightTop: 'Lycée El jamai ,Tanger'
 };
 
 const AR_HEADER = {
-  ...FR_HEADER,
   rightTop: 'ثانوية الجامعي، طنجة'
 };
 
@@ -25,12 +19,7 @@ function setInputValue(selector, value) {
 
 function syncHeaderLanguage() {
   var header = window.__examLanguage === 'ar' ? AR_HEADER : FR_HEADER;
-  setInputValue('.inline-class-input', header.level);
-  setInputValue('.title-line-top', header.titleTop);
-  setInputValue('.title-line-middle', header.titleMiddle);
-  setInputValue('.title-line-bottom', header.titleBottom);
   setInputValue('.right-line-top', header.rightTop);
-  setInputValue('.right-line-bottom', header.rightBottom);
 }
 
 function syncLanguageButton() {
