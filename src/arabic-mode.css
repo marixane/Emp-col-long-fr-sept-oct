@@ -16,7 +16,7 @@ body.arabic-mode .exam-header input {
 body.arabic-mode .exercise-title {
   left: auto !important;
   right: 12px !important;
-  z-index: 90 !important;
+  z-index: 120 !important;
 }
 
 body.arabic-mode .exam-page:not(.has-bar-ribbon) .exercise-body::before,
@@ -31,12 +31,12 @@ body.arabic-mode .exam-page:not(.has-bar-ribbon) .exercise-body::after {
 body.arabic-mode .exam-page.has-bar-ribbon .exercise-body::before {
   left: auto !important;
   right: -4mm !important;
-  width: 37px !important;
+  width: 39px !important;
   background: #eeeeee !important;
   border-left: 2px solid #9a9a9a !important;
   border-right: 2px solid #9a9a9a !important;
   box-shadow: none !important;
-  z-index: 88 !important;
+  z-index: 110 !important;
 }
 
 body.arabic-mode .exam-page.has-bar-ribbon .exercise-body::after {
@@ -48,13 +48,13 @@ body.arabic-mode .exam-page.has-bar-ribbon .exam-exercise:first-child .exercise-
   content: 'سلم\A التنقيط' !important;
   display: block !important;
   left: auto !important;
-  right: calc(2px - 4mm) !important;
-  width: 29px !important;
+  right: calc(1px - 4mm) !important;
+  width: 31px !important;
   font-size: 6px !important;
   line-height: 1.05 !important;
   white-space: pre-line !important;
   text-align: center !important;
-  z-index: 89 !important;
+  z-index: 112 !important;
 }
 
 body.arabic-mode .exam-page.has-bar-ribbon .exercise-body {
@@ -63,8 +63,7 @@ body.arabic-mode .exam-page.has-bar-ribbon .exercise-body {
 }
 
 body.arabic-mode .exam-page.has-bar-ribbon .exam-exercise {
-  border-right: 2px solid #111111 !important;
-  border-right-color: #111111 !important;
+  border-right-color: transparent !important;
 }
 
 body.arabic-mode .exam-page.has-bar-ribbon .bar-buttons {
@@ -75,7 +74,7 @@ body.arabic-mode .exam-page.has-bar-ribbon .bar-buttons {
 body.arabic-mode .exam-page.has-bar-ribbon .bar-mark {
   left: auto !important;
   right: 7px !important;
-  z-index: 89 !important;
+  z-index: 114 !important;
   background: transparent !important;
   color: #555555 !important;
   font-size: 12px !important;
