@@ -74,6 +74,24 @@
   color: #334155 !important;
 }
 
+.preview-zone {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  align-content: flex-start !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  gap: 34px !important;
+  padding: 20px 20px 70px !important;
+  overflow: auto !important;
+}
+
+.preview-zone .a4-page {
+  flex: 0 0 794px !important;
+  width: 794px !important;
+  margin: 0 !important;
+}
+
 .exam-page.is-exporting .exercise-body {
   background-color: #ffffff !important;
   background-image: linear-gradient(to bottom, transparent 0, transparent 27px, #d9d9d9 28px, #d9d9d9 29px) !important;
