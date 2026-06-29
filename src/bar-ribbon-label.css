@@ -1,0 +1,18 @@
+.exam-page.has-bar-ribbon .exercise-body::after {
+  content: 'Barème';
+  position: absolute;
+  left: -2px;
+  top: 18px;
+  width: 25px;
+  color: #111111;
+  font-size: 7px;
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+  z-index: 28;
+  pointer-events: none;
+}
+
+.exam-page.is-exporting.has-bar-ribbon .exercise-body::after {
+  font-size: 7px !important;
+}
