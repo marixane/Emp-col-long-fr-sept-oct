@@ -9,7 +9,7 @@ function applyA4OverviewZoom() {
   );
 
   var level = Number(window.__a4OverviewZoomLevel || 0);
-  if (level > 3) {
+  if (level > 2) {
     window.__a4OverviewZoomLevel = 0;
     level = 0;
   }
@@ -70,7 +70,7 @@ function syncA4OverviewButton() {
     button.type = 'button';
     button.className = 'a4-overview-toggle';
     button.addEventListener('click', function () {
-      window.__a4OverviewZoomLevel = (Number(window.__a4OverviewZoomLevel || 0) + 1) % 4;
+      window.__a4OverviewZoomLevel = (Number(window.__a4OverviewZoomLevel || 0) + 1) % 3;
       applyA4OverviewZoom();
       syncA4OverviewButton();
       focusArabicA4Overview();
@@ -88,7 +88,7 @@ function syncA4OverviewButton() {
   }
 
   var level = Number(window.__a4OverviewZoomLevel || 0);
-  button.textContent = level > 0 ? 'Zoom A4 ' + level + '/3' : 'Zoom A4';
+  button.textContent = level > 0 ? 'Zoom A4 ' + level + '/2' : 'Zoom A4';
   button.classList.toggle('active', level > 0);
 }
 
