@@ -143,7 +143,7 @@ function syncLanguageButton() {
 function syncNotesLabel() {
   var notesTitle = document.querySelector('.note-scale-title');
   if (!notesTitle) return;
-  var next = window.__examLanguage === 'ar' ? 'النقط :' : 'Notes :';
+  var next = window.__examLanguage === 'ar' ? ': النقط' : 'Notes :';
   if (notesTitle.textContent !== next) notesTitle.textContent = next;
 }
 
