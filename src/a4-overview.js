@@ -11,6 +11,32 @@ function disableA4OverviewForPdfButtons(panel) {
   });
 }
 
+function focusArabicA4Overview() {
+  if (window.__examLanguage !== 'ar') return;
+  if (!document.body.classList.contains('a4-overview-mode')) return;
+
+  var preview = document.querySelector('.preview-zone');
+  var page = document.querySelector('.preview-zone .a4-page');
+  if (!preview || !page) return;
+
+  requestAnimationFrame(function () {
+    preview.scrollTop = 0;
+    preview.scrollLeft = 0;
+
+    page.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+      inline: 'start'
+    });
+
+    window.scrollBy({
+      left: -12,
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+}
+
 function syncA4OverviewButton() {
   var panel = document.querySelector('.panel');
   if (!panel) return;
@@ -25,6 +51,7 @@ function syncA4OverviewButton() {
     button.addEventListener('click', function () {
       document.body.classList.toggle('a4-overview-mode');
       syncA4OverviewButton();
+      focusArabicA4Overview();
     });
 
     var pdfButton = Array.from(panel.querySelectorAll(':scope > button')).find(function (item) {
