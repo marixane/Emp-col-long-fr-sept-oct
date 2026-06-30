@@ -1,11 +1,13 @@
 window.__examLanguage = window.__examLanguage || localStorage.getItem('examLanguage') || 'fr';
 
 const FR_HEADER = {
-  rightTop: 'Lycée El jamai ,Tanger'
+  rightTop: 'Lycée El jamai ,Tanger',
+  individualTitle: 'Devoir individuel'
 };
 
 const AR_HEADER = {
-  rightTop: 'ثانوية الجامعي، طنجة'
+  rightTop: 'ثانوية الجامعي، طنجة',
+  individualTitle: 'فرض محروس'
 };
 
 function setInputValue(selector, value) {
@@ -20,6 +22,13 @@ function setInputValue(selector, value) {
 function syncHeaderLanguage() {
   var header = window.__examLanguage === 'ar' ? AR_HEADER : FR_HEADER;
   setInputValue('.right-line-top', header.rightTop);
+
+  var titleTop = document.querySelector('.title-line-top');
+  if (titleTop) {
+    var current = titleTop.value || '';
+    var isIndividual = current === FR_HEADER.individualTitle || current === AR_HEADER.individualTitle;
+    if (isIndividual) setInputValue('.title-line-top', header.individualTitle);
+  }
 }
 
 function syncLanguageButton() {
@@ -74,5 +83,6 @@ setTimeout(syncLanguageMode, 400);
 
 new MutationObserver(function () {
   syncLanguageButton();
+  syncHeaderLanguage();
   syncExerciseTitles();
 }).observe(document.body, { childList: true, subtree: true });
