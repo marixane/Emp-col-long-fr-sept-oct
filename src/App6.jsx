@@ -1,6 +1,4 @@
 import { useRef, useState } from 'react';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
 
 const MAX_PAGES = 6;
 const MAX_EX = 6;
@@ -196,12 +194,12 @@ export default function App6() {
     const h = hs[page]?.[pages[page].findIndex((item) => item.id === exId)] ?? 600;
     setPages((cur) => cur.map((p, pi) => pi === page ? p.map((e) => e.id === exId ? {
       ...e,
-      barMarks: (e.barMarks ?? []).map((m) => m.id === markId ? { ...m, x: clamp(updates.x ?? m.x, -4, 705), y: clampBarMarkY(updates.y ?? m.y, h) } : m),
+      barMarks: (e.barMarks ?? []).map((m) => m.id === markId ? { ...m, ...updates, y: clampBarMarkY(updates.y ?? m.y, h) } : m),
     } : e) : p));
   };
   const startPhotoDrag = (ev, page, e) => {
+    if (!e.image) return;
     ev.preventDefault();
-    ev.stopPropagation();
     setResize(null);
     setDrag({ type: 'photo', page, id: e.id, sx: ev.clientX, sy: ev.clientY, x: e.x ?? 0, y: e.y ?? 0 });
   };
@@ -259,6 +257,10 @@ export default function App6() {
   const makePdf = async () => {
     setExporting(true);
     stopMove();
+    const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
+      import('html2canvas'),
+      import('jspdf')
+    ]);
     await new Promise((r) => setTimeout(r, 120));
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
     for (let k = 0; k < active.length; k += 1) {
