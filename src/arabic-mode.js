@@ -91,6 +91,13 @@ function setIndividualHeaderTitle(isActive) {
   }
 }
 
+function syncPanelLabels() {
+  var notesTitle = document.querySelector('.note-scale-title');
+  if (notesTitle) {
+    notesTitle.textContent = window.__examLanguage === 'ar' ? 'النقط :' : 'Notes :';
+  }
+}
+
 function syncLanguageButton() {
   var panel = document.querySelector('.panel');
   if (!panel) return;
@@ -116,7 +123,6 @@ function syncLanguageButton() {
     individualButton = document.createElement('button');
     individualButton.className = 'individual-toggle';
     individualButton.type = 'button';
-    individualButton.textContent = 'Devoir\nindividuel';
     individualButton.addEventListener('click', function () {
       document.body.classList.toggle('no-title-points');
       var active = document.body.classList.contains('no-title-points');
@@ -124,6 +130,7 @@ function syncLanguageButton() {
       var barButton = document.querySelector('.bar-ribbon-toggle');
       if (barButton) barButton.click();
       syncLanguageButton();
+      syncPanelLabels();
     });
 
     if (button.nextSibling) panel.insertBefore(individualButton, button.nextSibling);
@@ -132,7 +139,9 @@ function syncLanguageButton() {
 
   var isActive = document.body.classList.contains('no-title-points');
   individualButton.classList.toggle('active', !isActive);
-  individualButton.textContent = isActive ? 'Devoir\nlibre' : 'Devoir\nindividuel';
+  individualButton.textContent = window.__examLanguage === 'ar'
+    ? (isActive ? 'فرض\nمنزلي' : 'فرض\nمحروس')
+    : (isActive ? 'Devoir\nlibre' : 'Devoir\nindividuel');
   button.textContent = window.__examLanguage === 'ar' ? 'Français' : 'العربية';
 }
 
@@ -177,6 +186,7 @@ function syncLanguageMode() {
   document.body.classList.toggle('arabic-mode', window.__examLanguage === 'ar');
   document.documentElement.setAttribute('dir', 'ltr');
   syncLanguageButton();
+  syncPanelLabels();
   syncHeaderLanguage();
   bindDurationButtons();
   scheduleDurationSync();
@@ -190,6 +200,7 @@ setTimeout(syncLanguageMode, 400);
 
 new MutationObserver(function () {
   syncLanguageButton();
+  syncPanelLabels();
   syncHeaderLanguage();
   bindDurationButtons();
   scheduleDurationSync();
