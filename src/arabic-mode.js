@@ -1,201 +1,152 @@
 window.__examLanguage = window.__examLanguage || 'fr';
 
-const FR_HEADER = {
+const FR = {
   rightTop: 'Lycée El jamai ,Tanger',
   rightBottom: 'Matière: Mathématique',
   individualTitle: 'Devoir individuel',
   freeTitle: 'Devoir libre',
   homeworkTitle: 'Devoir à la maison',
   subject: 'N° : 1 Semestre : 1',
-  level: 'Classe : 2 Bac SPF'
+  level: 'Classe : 2 Bac SPF',
+  notes: 'Notes :',
+  langButton: '\u0627\u0644\u0639\u0631\u0628\u064a\u0629',
+  freeButton: 'Devoir\nlibre',
+  individualButton: 'Devoir\nindividuel',
+  page: 'Page ',
+  exercise: 'Exercice '
 };
 
-const AR_HEADER = {
-  rightTop: 'ثانوية الجامعي، طنجة',
-  rightBottom: 'مادة : الرياضيات',
-  individualTitle: 'فرض محروس',
-  freeTitle: 'فرض منزلي',
-  homeworkTitle: 'فرض منزلي',
-  subject: 'رقم 1 الدورة 1',
-  level: 'قسم : 2 باك ع.ف'
+const AR = {
+  rightTop: '\u062b\u0627\u0646\u0648\u064a\u0629 \u0627\u0644\u062c\u0627\u0645\u0639\u064a\u060c \u0637\u0646\u062c\u0629',
+  rightBottom: '\u0645\u0627\u062f\u0629 : \u0627\u0644\u0631\u064a\u0627\u0636\u064a\u0627\u062a',
+  individualTitle: '\u0641\u0631\u0636 \u0645\u062d\u0631\u0648\u0633',
+  freeTitle: '\u0641\u0631\u0636 \u0645\u0646\u0632\u0644\u064a',
+  homeworkTitle: '\u0641\u0631\u0636 \u0645\u0646\u0632\u0644\u064a',
+  subject: '\u0631\u0642\u0645 1 \u0627\u0644\u062f\u0648\u0631\u0629 1',
+  level: '\u0642\u0633\u0645 : 2 \u0628\u0627\u0643 \u0639.\u0641',
+  notes: ': \u0627\u0644\u0646\u0642\u0637',
+  langButton: 'Français',
+  freeButton: '\u0641\u0631\u0636\n\u0645\u0646\u0632\u0644\u064a',
+  individualButton: '\u0641\u0631\u0636\n\u0645\u062d\u0631\u0648\u0633',
+  page: '\u0627\u0644\u0635\u0641\u062d\u0629 ',
+  exercise: '\u062a\u0645\u0631\u064a\u0646 '
 };
 
-const DURATION_FR_TO_AR = {
-  '30 min': '30 د',
-  '1 h': '1 س',
-  '1 h 30': '1 س 30 د',
-  '2 h': '2 س',
-  '2 h 30': '2 س 30 د',
-  '3 h': '3 س',
-  '3 h 30': '3 س 30 د',
-  '4 h': '4 س'
+const DUR_FR_AR = {
+  '30 min': '30 \u062f',
+  '1 h': '1 \u0633',
+  '1 h 30': '1 \u0633 30 \u062f',
+  '2 h': '2 \u0633',
+  '2 h 30': '2 \u0633 30 \u062f',
+  '3 h': '3 \u0633',
+  '3 h 30': '3 \u0633 30 \u062f',
+  '4 h': '4 \u0633'
 };
+const DUR_AR_FR = {};
+Object.keys(DUR_FR_AR).forEach(function (k) { DUR_AR_FR[DUR_FR_AR[k]] = k; });
 
-const DURATION_AR_TO_FR = {};
-Object.keys(DURATION_FR_TO_AR).forEach(function (fr) {
-  DURATION_AR_TO_FR[DURATION_FR_TO_AR[fr]] = fr;
-});
+function pack() { return window.__examLanguage === 'ar' ? AR : FR; }
 
-function setInputValue(selector, value) {
-  var input = document.querySelector(selector);
-  if (!input || input.value === value) return;
-  var descriptor = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value');
-  var setter = descriptor && descriptor.set;
-  if (setter) setter.call(input, value);
-  else input.value = value;
-  input.dispatchEvent(new Event('input', { bubbles: true }));
+function setTextArea(selector, value) {
+  var el = document.querySelector(selector);
+  if (!el || el.value === value) return;
+  var d = Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value');
+  if (d && d.set) d.set.call(el, value); else el.value = value;
+  el.dispatchEvent(new Event('input', { bubbles: true }));
 }
 
-function syncHeaderLanguage() {
-  var header = window.__examLanguage === 'ar' ? AR_HEADER : FR_HEADER;
-  setInputValue('.right-line-top', header.rightTop);
-
-  var rightBottom = document.querySelector('.right-line-bottom');
-  if (rightBottom) {
-    var currentRightBottom = rightBottom.value || '';
-    var isRightBottom = currentRightBottom === 'N° : 1 Semestre : 1' || currentRightBottom === FR_HEADER.rightBottom || currentRightBottom === AR_HEADER.rightBottom;
-    if (isRightBottom) setInputValue('.right-line-bottom', header.rightBottom);
-  }
-
-  var levelInput = document.querySelector('.inline-class-input');
-  if (levelInput) {
-    var currentLevel = levelInput.value || '';
-    var isLevel = currentLevel === FR_HEADER.level || currentLevel === AR_HEADER.level;
-    if (isLevel) setInputValue('.inline-class-input', header.level);
-  }
-
-  var titleTop = document.querySelector('.title-line-top');
-  if (titleTop) {
-    var currentTop = titleTop.value || '';
-    var isIndividual = currentTop === FR_HEADER.individualTitle || currentTop === AR_HEADER.individualTitle;
-    var isFree = currentTop === FR_HEADER.freeTitle || currentTop === AR_HEADER.freeTitle;
-    var isHomework = currentTop === FR_HEADER.homeworkTitle || currentTop === AR_HEADER.homeworkTitle;
-    if (isIndividual) setInputValue('.title-line-top', header.individualTitle);
-    if (isFree) setInputValue('.title-line-top', header.freeTitle);
-    if (isHomework) setInputValue('.title-line-top', header.homeworkTitle);
-  }
-
-  var titleMiddle = document.querySelector('.title-line-middle');
-  if (titleMiddle) {
-    var currentMiddle = titleMiddle.value || '';
-    var isSubject = currentMiddle === 'Mathématique' || currentMiddle === FR_HEADER.subject || currentMiddle === 'الرياضيات' || currentMiddle === AR_HEADER.subject;
-    if (isSubject) setInputValue('.title-line-middle', header.subject);
-  }
+function setIfKnown(selector, known, next) {
+  var el = document.querySelector(selector);
+  if (el && known.indexOf(el.value || '') !== -1) setTextArea(selector, next);
 }
 
-function setIndividualHeaderTitle(isActive) {
-  var titleTop = document.querySelector('.title-line-top');
-  if (!titleTop) return;
-  if (window.__examLanguage === 'ar') {
-    setInputValue('.title-line-top', isActive ? AR_HEADER.freeTitle : AR_HEADER.individualTitle);
-  } else {
-    setInputValue('.title-line-top', isActive ? FR_HEADER.freeTitle : FR_HEADER.individualTitle);
-  }
+function syncHeader() {
+  var p = pack();
+  setIfKnown('.right-line-top', [FR.rightTop, AR.rightTop], p.rightTop);
+  setIfKnown('.right-line-bottom', ['N° : 1 Semestre : 1', FR.rightBottom, AR.rightBottom], p.rightBottom);
+  setIfKnown('.inline-class-input', [FR.level, AR.level], p.level);
+  setIfKnown('.title-line-middle', ['Mathématique', FR.subject, AR.subject], p.subject);
+  var top = document.querySelector('.title-line-top');
+  if (!top) return;
+  var v = top.value || '';
+  if ([FR.individualTitle, AR.individualTitle].indexOf(v) !== -1) setTextArea('.title-line-top', p.individualTitle);
+  if ([FR.freeTitle, AR.freeTitle].indexOf(v) !== -1) setTextArea('.title-line-top', p.freeTitle);
+  if ([FR.homeworkTitle, AR.homeworkTitle].indexOf(v) !== -1) setTextArea('.title-line-top', p.homeworkTitle);
 }
 
-function syncLanguageButton() {
+function syncLabels() {
+  var p = pack();
+  var notes = document.querySelector('.note-scale-title');
+  if (notes) notes.textContent = p.notes;
+  document.querySelectorAll('.page-number').forEach(function (n) {
+    var m = (n.textContent || '').match(/(?:Page|\u0627\u0644\u0635\u0641\u062d\u0629)\s*(\d+)\s*\/\s*(\d+)/);
+    if (m) n.textContent = p.page + m[1] + '/' + m[2];
+  });
+  document.querySelectorAll('.page-count-card > label').forEach(function (n) {
+    var m = (n.textContent || '').match(/(?:Page|\u0627\u0644\u0635\u0641\u062d\u0629)\s*(\d+)/);
+    if (m) n.textContent = p.page + m[1];
+  });
+  document.querySelectorAll('.exam-exercise:not(.blank-exercise) .exercise-title-controls > span:first-child').forEach(function (s) {
+    var m = (s.textContent || '').match(/(?:Exercice|\u062a\u0645\u0631\u064a\u0646)\s*(\d+)/i);
+    if (!m) return;
+    var c = s.closest('.exercise-title-controls');
+    var isHomework = c && !c.querySelector('button');
+    s.textContent = p.exercise + m[1] + (isHomework ? '' : ' :');
+  });
+}
+
+function syncDuration() {
+  document.querySelectorAll('.tiny-duration-control strong').forEach(function (n) {
+    var t = (n.textContent || '').trim();
+    var next = window.__examLanguage === 'ar' ? DUR_FR_AR[t] : DUR_AR_FR[t];
+    if (next) n.textContent = next;
+  });
+}
+
+function setFreeTitle(active) {
+  var p = pack();
+  setTextArea('.title-line-top', active ? p.freeTitle : p.individualTitle);
+}
+
+function syncButtons() {
   var panel = document.querySelector('.panel');
   if (!panel) return;
-
-  var button = document.querySelector('.language-toggle');
-  if (!button) {
-    button = document.createElement('button');
-    button.className = 'language-toggle';
-    button.type = 'button';
-    button.addEventListener('click', function () {
+  var lang = document.querySelector('.language-toggle');
+  if (!lang) {
+    lang = document.createElement('button');
+    lang.className = 'language-toggle';
+    lang.type = 'button';
+    lang.addEventListener('click', function () {
       window.__examLanguage = window.__examLanguage === 'ar' ? 'fr' : 'ar';
       syncLanguageMode();
-      setIndividualHeaderTitle(document.body.classList.contains('no-title-points'));
     });
-
     var title = panel.querySelector('.eyebrow');
-    if (title && title.nextSibling) panel.insertBefore(button, title.nextSibling);
-    else panel.insertBefore(button, panel.firstChild);
+    if (title && title.nextSibling) panel.insertBefore(lang, title.nextSibling); else panel.insertBefore(lang, panel.firstChild);
   }
-
-  var individualButton = document.querySelector('.individual-toggle');
-  if (!individualButton) {
-    individualButton = document.createElement('button');
-    individualButton.className = 'individual-toggle';
-    individualButton.type = 'button';
-    individualButton.textContent = 'Devoir\nlibre';
-    individualButton.addEventListener('click', function () {
+  var free = document.querySelector('.individual-toggle');
+  if (!free) {
+    free = document.createElement('button');
+    free.className = 'individual-toggle';
+    free.type = 'button';
+    free.addEventListener('click', function () {
       document.body.classList.toggle('no-title-points');
-      var active = document.body.classList.contains('no-title-points');
-      setIndividualHeaderTitle(active);
-      syncLanguageButton();
+      setFreeTitle(document.body.classList.contains('no-title-points'));
+      syncButtons();
     });
-
-    if (button.nextSibling) panel.insertBefore(individualButton, button.nextSibling);
-    else panel.appendChild(individualButton);
+    if (lang.nextSibling) panel.insertBefore(free, lang.nextSibling); else panel.appendChild(free);
   }
-
-  var isActive = document.body.classList.contains('no-title-points');
-  individualButton.classList.toggle('active', !isActive);
-  if (window.__examLanguage === 'ar') {
-    individualButton.textContent = isActive ? 'فرض\nمحروس' : 'فرض\nمنزلي';
-  } else {
-    individualButton.textContent = isActive ? 'Devoir\nindividuel' : 'Devoir\nlibre';
-  }
-  button.textContent = window.__examLanguage === 'ar' ? 'Français' : 'العربية';
-}
-
-function syncNotesLabel() {
-  var notesTitle = document.querySelector('.note-scale-title');
-  if (!notesTitle) return;
-  var next = window.__examLanguage === 'ar' ? ': النقط' : 'Notes :';
-  if (notesTitle.textContent !== next) notesTitle.textContent = next;
-}
-
-function syncPageNumberLabels() {
-  document.querySelectorAll('.page-number').forEach(function (node) {
-    var text = node.textContent || '';
-    var match = text.match(/(?:Page|الصفحة)\s*(\d+)\s*\/\s*(\d+)/);
-    if (!match) return;
-    var next = window.__examLanguage === 'ar' ? 'الصفحة ' + match[1] + '/' + match[2] : 'Page ' + match[1] + '/' + match[2];
-    if (node.textContent !== next) node.textContent = next;
-  });
-}
-
-function syncMenuPageLabels() {
-  document.querySelectorAll('.page-count-card > label').forEach(function (node) {
-    var text = node.textContent || '';
-    var match = text.match(/(?:Page|الصفحة)\s*(\d+)/);
-    if (!match) return;
-    var next = window.__examLanguage === 'ar' ? 'الصفحة ' + match[1] : 'Page ' + match[1];
-    if (node.textContent !== next) node.textContent = next;
-  });
-}
-
-function syncDurationLabels() {
-  document.querySelectorAll('.tiny-duration-control strong').forEach(function (duration) {
-    var text = (duration.textContent || '').trim();
-    var next = window.__examLanguage === 'ar' ? DURATION_FR_TO_AR[text] : DURATION_AR_TO_FR[text];
-    if (next && duration.textContent !== next) duration.textContent = next;
-  });
+  var p = pack();
+  var isFree = document.body.classList.contains('no-title-points');
+  lang.textContent = p.langButton;
+  free.textContent = isFree ? p.individualButton : p.freeButton;
+  free.classList.toggle('active', !isFree);
 }
 
 function bindDurationButtons() {
-  document.querySelectorAll('.tiny-duration-control button').forEach(function (button) {
-    if (button.dataset.durationSyncBound === 'true') return;
-    button.dataset.durationSyncBound = 'true';
-    button.addEventListener('click', function () {
-      setTimeout(syncDurationLabels, 60);
-    });
-  });
-}
-
-function syncExerciseTitles() {
-  document.querySelectorAll('.exam-exercise:not(.blank-exercise) .exercise-title-controls > span:first-child').forEach(function (span) {
-    var controls = span.closest('.exercise-title-controls');
-    var text = span.textContent || '';
-    var match = text.match(/(?:Exercice|تمرين)\s*(\d+)/i);
-    if (!match) return;
-    var isHomeworkTitle = controls && !controls.querySelector('button');
-    var next = window.__examLanguage === 'ar'
-      ? 'تمرين ' + match[1] + (isHomeworkTitle ? '' : ' :')
-      : 'Exercice ' + match[1] + (isHomeworkTitle ? '' : ' :');
-    if (span.textContent !== next) span.textContent = next;
+  document.querySelectorAll('.tiny-duration-control button').forEach(function (b) {
+    if (b.dataset.durationSyncBound === 'true') return;
+    b.dataset.durationSyncBound = 'true';
+    b.addEventListener('click', function () { setTimeout(syncDuration, 80); });
   });
 }
 
@@ -203,34 +154,13 @@ function syncLanguageMode() {
   if (!document.body) return;
   document.body.classList.toggle('arabic-mode', window.__examLanguage === 'ar');
   document.documentElement.setAttribute('dir', 'ltr');
-  syncLanguageButton();
-  syncNotesLabel();
-  syncPageNumberLabels();
-  syncMenuPageLabels();
-  syncHeaderLanguage();
+  syncButtons();
+  syncHeader();
+  syncLabels();
+  syncDuration();
   bindDurationButtons();
-  syncDurationLabels();
-  syncExerciseTitles();
   if (typeof window.formatExercisePointLabels === 'function') window.formatExercisePointLabels();
 }
 
-var syncQueued = false;
-function queueLanguageSync() {
-  if (syncQueued) return;
-  syncQueued = true;
-  setTimeout(function () {
-    syncQueued = false;
-    syncLanguageButton();
-    syncPageNumberLabels();
-    syncMenuPageLabels();
-    syncExerciseTitles();
-    bindDurationButtons();
-  }, 250);
-}
-
 syncLanguageMode();
-setTimeout(syncLanguageMode, 250);
-
-if (document.body && window.MutationObserver) {
-  new MutationObserver(queueLanguageSync).observe(document.body, { childList: true, subtree: true });
-}
+setTimeout(syncButtons, 250);
