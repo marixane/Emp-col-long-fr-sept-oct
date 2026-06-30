@@ -16,6 +16,12 @@
 }
 
 .exercise-title-controls button:not(:disabled),
-.exercise-title-controls button:not(:disabled)::after {
+.exercise-title-controls button:not(:disabled)::after,
+.a4-overview-button:not(:disabled),
+.panel button:not(:disabled) {
   cursor: pointer !important;
+}
+
+.panel button:disabled {
+  cursor: not-allowed !important;
 }
