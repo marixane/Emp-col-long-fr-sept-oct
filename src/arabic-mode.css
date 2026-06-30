@@ -80,6 +80,12 @@ body.arabic-mode .exam-page .exercise-title {
   right: 12px !important;
 }
 
+body.arabic-mode .resize-handle {
+  left: 0 !important;
+  right: auto !important;
+  transform: translateX(-50%) scaleX(-1) !important;
+}
+
 body.arabic-mode .exercise-title-controls {
   direction: rtl !important;
   display: flex !important;
