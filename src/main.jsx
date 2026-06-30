@@ -8,6 +8,7 @@ import './dark-background.css';
 import './photo-controls-opaque.css';
 import './page-status.css';
 import './extra-pages-full-height.css';
+import './extra-page-resize-override.css';
 import './header-duration-bigger.css';
 import './points-buttons-below.css';
 import './mobile-responsive.css';
