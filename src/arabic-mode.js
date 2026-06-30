@@ -2,7 +2,7 @@ window.__examLanguage = window.__examLanguage || localStorage.getItem('examLangu
 
 const FR_HEADER = {
   rightTop: 'Lycée El jamai ,Tanger',
-  rightBottom: 'N° : 1 Semestre : 1',
+  rightBottom: 'Matière: Mathématique',
   individualTitle: 'Devoir individuel',
   freeTitle: 'Devoir libre',
   homeworkTitle: 'Devoir à la maison',
@@ -36,7 +36,7 @@ function syncHeaderLanguage() {
   var rightBottom = document.querySelector('.right-line-bottom');
   if (rightBottom) {
     var currentRightBottom = rightBottom.value || '';
-    var isRightBottom = currentRightBottom === FR_HEADER.rightBottom || currentRightBottom === AR_HEADER.rightBottom;
+    var isRightBottom = currentRightBottom === 'N° : 1 Semestre : 1' || currentRightBottom === FR_HEADER.rightBottom || currentRightBottom === AR_HEADER.rightBottom;
     if (isRightBottom) setInputValue('.right-line-bottom', header.rightBottom);
   }
 
