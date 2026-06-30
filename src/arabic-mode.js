@@ -1,4 +1,4 @@
-window.__examLanguage = window.__examLanguage || localStorage.getItem('examLanguage') || 'fr';
+window.__examLanguage = window.__examLanguage || 'fr';
 
 const FR_HEADER = {
   rightTop: 'Lycée El jamai ,Tanger',
@@ -102,7 +102,6 @@ function syncLanguageButton() {
     button.type = 'button';
     button.addEventListener('click', function () {
       window.__examLanguage = window.__examLanguage === 'ar' ? 'fr' : 'ar';
-      localStorage.setItem('examLanguage', window.__examLanguage);
       syncLanguageMode();
       setIndividualHeaderTitle(document.body.classList.contains('no-title-points'));
     });
