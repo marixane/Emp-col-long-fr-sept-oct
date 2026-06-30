@@ -1,8 +1,8 @@
 window.__a4OverviewZoomLevel = window.__a4OverviewZoomLevel || 0;
 
 var A4_OVERVIEW_ZOOM_LABELS = {
-  1: 'Zoom 100%',
-  2: 'Zoom 75%'
+  1: 'Zoom 55%',
+  2: 'Zoom 42%'
 };
 
 function applyA4OverviewZoom() {
