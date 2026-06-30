@@ -167,22 +167,6 @@ function syncMenuPageLabels() {
   });
 }
 
-function syncPdfButtonLabels() {
-  document.querySelectorAll('.panel > button').forEach(function (button) {
-    var text = button.textContent || '';
-    if (text === 'Préparation...' || text === 'Export en cours...') return;
-    if (text === 'Voir PDF' || text === 'عرض ملف PDF') {
-      var nextPreview = window.__examLanguage === 'ar' ? 'عرض ملف PDF' : 'Voir PDF';
-      if (button.textContent !== nextPreview) button.textContent = nextPreview;
-      return;
-    }
-    if (text === 'Exporter PDF A4' || text === 'Exporter PDF' || text === 'تصدير ملف PDF') {
-      var nextExport = window.__examLanguage === 'ar' ? 'تصدير ملف PDF' : 'Exporter PDF A4';
-      if (button.textContent !== nextExport) button.textContent = nextExport;
-    }
-  });
-}
-
 function syncDurationLabels() {
   document.querySelectorAll('.tiny-duration-control strong').forEach(function (duration) {
     var text = (duration.textContent || '').trim();
@@ -227,7 +211,6 @@ function syncLanguageMode() {
   syncNotesLabel();
   syncPageNumberLabels();
   syncMenuPageLabels();
-  syncPdfButtonLabels();
   syncHeaderLanguage();
   bindDurationButtons();
   scheduleDurationSync();
@@ -244,7 +227,6 @@ new MutationObserver(function () {
   syncNotesLabel();
   syncPageNumberLabels();
   syncMenuPageLabels();
-  syncPdfButtonLabels();
   syncHeaderLanguage();
   bindDurationButtons();
   scheduleDurationSync();
