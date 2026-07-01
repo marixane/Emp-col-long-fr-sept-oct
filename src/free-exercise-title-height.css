@@ -6,6 +6,9 @@ body.no-title-points .exam-exercise:not(.blank-exercise) .exercise-title-control
   padding-bottom: 0 !important;
   line-height: 20px !important;
   align-items: center !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: max-content !important;
 }
 
 body.no-title-points .exam-exercise:not(.blank-exercise) .exercise-title-controls span:first-child {
@@ -15,6 +18,7 @@ body.no-title-points .exam-exercise:not(.blank-exercise) .exercise-title-control
 }
 
 body.arabic-mode.no-title-points .exam-exercise:not(.blank-exercise) .exercise-title-controls {
-  width: calc(100% + 1.5cm) !important;
-  min-width: calc(100% + 1.5cm) !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: max-content !important;
 }
