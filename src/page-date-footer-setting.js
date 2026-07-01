@@ -47,9 +47,14 @@ function updatePageDates() {
     if (!node) {
       node = document.createElement('div');
       node.className = 'page-date';
+      node.addEventListener('click', function (event) {
+        event.stopPropagation();
+        setDateVisible(false);
+      });
       page.appendChild(node);
     }
     node.textContent = value;
+    node.title = 'Cliquer pour masquer la date';
   });
 }
 
