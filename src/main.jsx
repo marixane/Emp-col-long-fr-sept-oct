@@ -67,5 +67,7 @@ import './a4-exam-title.js';
 import './page-exos-label.css';
 import './page-exos-label.js';
 import './preview-spacing-polish.css';
+import './top-education-navbar.css';
+import './top-education-navbar.js';
 
 createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);
