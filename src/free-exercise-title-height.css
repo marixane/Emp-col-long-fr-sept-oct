@@ -1,0 +1,13 @@
+body.no-title-points .exam-exercise:not(.blank-exercise) .exercise-title-controls {
+  height: 22px !important;
+  min-height: 22px !important;
+  max-height: 22px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  line-height: 20px !important;
+  align-items: center !important;
+}
+
+body.no-title-points .exam-exercise:not(.blank-exercise) .exercise-title-controls span:first-child {
+  line-height: 20px !important;
+}
