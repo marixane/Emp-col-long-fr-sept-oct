@@ -5,7 +5,7 @@ function isFreeModeActive() {
   var title = document.querySelector('.title-line-top');
   var value = ((title && (title.value || title.textContent)) || '').trim();
 
-  return value === 'Devoir libre' || value === 'فرض منزلي';
+  return value === 'Devoir libre' || value === 'Devoir à la maison' || value === 'فرض منزلي';
 }
 
 function updateDisplay(node, hidden) {
