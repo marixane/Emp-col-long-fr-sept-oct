@@ -86,7 +86,7 @@ function syncExerciseLineControls() {
     var count = getVisibleExerciseCount(pageIndex);
     var minus = controls.querySelector('.minus');
     var plus = controls.querySelector('.plus');
-    if (minus) minus.disabled = count <= 0;
+    if (minus) minus.disabled = count <= 1;
     if (plus) plus.disabled = count >= 6 || (pageIndex > 0 && getVisibleExerciseCount(0) === 0);
 
     lastExercise.appendChild(controls);
