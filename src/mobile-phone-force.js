@@ -26,7 +26,7 @@ function applyMobilePhoneForce() {
         min-height: 100vh !important;
         max-height: 100vh !important;
         display: grid !important;
-        grid-template-columns: 20vw 80vw !important;
+        grid-template-columns: 42px minmax(0, 1fr) !important;
         grid-template-rows: 100vh !important;
         gap: 0 !important;
         padding: 0 !important;
@@ -36,9 +36,9 @@ function applyMobilePhoneForce() {
 
       .panel {
         grid-column: 1 !important;
-        width: 20vw !important;
-        min-width: 20vw !important;
-        max-width: 20vw !important;
+        width: 42px !important;
+        min-width: 42px !important;
+        max-width: 42px !important;
         height: 100vh !important;
         min-height: 100vh !important;
         max-height: 100vh !important;
@@ -61,12 +61,25 @@ function applyMobilePhoneForce() {
         top: auto !important;
       }
 
+      .panel::-webkit-scrollbar {
+        width: 0 !important;
+        height: 0 !important;
+      }
+
       .page-date-control,
       .page-date-picker,
       .page-date-title,
       .page-date-input,
       .page-date-toggle,
-      .page-date-toggle-button {
+      .page-date-toggle-button,
+      .panel .eyebrow,
+      .panel h1,
+      .panel .intro,
+      .panel .form-group > label,
+      .exercise-count-section h2,
+      .note-scale-title,
+      .note-scale-counter,
+      .page-count-card label {
         display: none !important;
         width: 0 !important;
         height: 0 !important;
@@ -76,17 +89,6 @@ function applyMobilePhoneForce() {
         overflow: hidden !important;
       }
 
-      .panel h1,
-      .panel .intro,
-      .panel .form-group > label,
-      .exercise-count-section h2,
-      .note-scale-title,
-      .note-scale-counter,
-      .page-count-card label {
-        display: none !important;
-      }
-
-      .panel .eyebrow,
       .panel .form-group,
       .assignment-control,
       .note-scale-control,
@@ -95,9 +97,9 @@ function applyMobilePhoneForce() {
       .page-count-grid,
       .page-count-card,
       .page-count-card .compact-control {
-        width: 100% !important;
-        max-width: 100% !important;
-        min-width: 0 !important;
+        width: 36px !important;
+        max-width: 36px !important;
+        min-width: 36px !important;
         margin: 0 !important;
         padding: 0 !important;
         display: flex !important;
@@ -177,9 +179,9 @@ function applyMobilePhoneForce() {
 
       .preview-zone {
         grid-column: 2 !important;
-        width: 80vw !important;
-        min-width: 80vw !important;
-        max-width: 80vw !important;
+        width: calc(100vw - 42px) !important;
+        min-width: 0 !important;
+        max-width: calc(100vw - 42px) !important;
         height: 100vh !important;
         min-height: 100vh !important;
         max-height: 100vh !important;
@@ -195,17 +197,17 @@ function applyMobilePhoneForce() {
       }
 
       .preview-zone .a4-page {
-        transform: scale(0.47) !important;
+        transform: scale(0.52) !important;
         transform-origin: top left !important;
-        margin: 0 0 -430px 0 !important;
+        margin: 0 0 -375px 0 !important;
         flex: 0 0 auto !important;
       }
     }
 
     @media (max-width: 430px) {
       .preview-zone .a4-page {
-        transform: scale(0.45) !important;
-        margin-bottom: -455px !important;
+        transform: scale(0.50) !important;
+        margin-bottom: -400px !important;
       }
     }
   `;
