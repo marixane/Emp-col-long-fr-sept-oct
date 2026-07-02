@@ -74,5 +74,6 @@ import './two-page-view.css';
 import './two-page-view.js';
 import './pdf-original-size-now.js';
 import './mobile-phone-settings.css';
+import './mobile-phone-force.js';
 
 createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);
