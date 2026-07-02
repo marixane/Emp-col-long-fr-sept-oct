@@ -67,8 +67,6 @@ import './a4-exam-title.js';
 import './page-exos-label.css';
 import './page-exos-label.js';
 import './preview-spacing-polish.css';
-import './top-education-navbar.css';
-import './top-education-navbar.js';
 import './free-exercise-title-height.css';
 import './two-page-view.css';
 import './two-page-view.js';
