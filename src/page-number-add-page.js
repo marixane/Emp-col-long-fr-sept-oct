@@ -1,7 +1,21 @@
-function getFooterInfo(node) {
-  var match = String((node && node.textContent) || '').match(/Page\s+(\d+)\s*\/\s*(\d+)/i);
-  if (!match) return null;
-  return { current: Number(match[1]), total: Number(match[2]) };
+function normalizeDigits(text) {
+  return String(text || '').replace(/[٠-٩]/g, function (digit) {
+    return String('٠١٢٣٤٥٦٧٨٩'.indexOf(digit));
+  }).replace(/[۰-۹]/g, function (digit) {
+    return String('۰۱۲۳۴۵۶۷۸۹'.indexOf(digit));
+  });
+}
+
+function getFooterInfo(node, fallbackIndex) {
+  var text = normalizeDigits((node && node.textContent) || '');
+  var match = text.match(/Page\s+(\d+)\s*\/\s*(\d+)/i);
+  if (match) return { current: Number(match[1]), total: Number(match[2]) };
+
+  var nums = text.match(/\d+/g);
+  if (nums && nums.length >= 2) return { current: Number(nums[0]), total: Number(nums[1]) };
+
+  var totalPages = document.querySelectorAll('.a4-page').length || 1;
+  return { current: Number(fallbackIndex || 0) + 1, total: totalPages };
 }
 
 function getCountCards() {
@@ -70,7 +84,8 @@ function runPageButton(event, pageNode, action) {
   if (runPageButton.last && now - runPageButton.last < 180) return;
   runPageButton.last = now;
   var pageNumber = pageNode.querySelector('.page-number');
-  var info = getFooterInfo(pageNumber);
+  var pageIndex = Array.from(document.querySelectorAll('.a4-page')).indexOf(pageNode);
+  var info = getFooterInfo(pageNumber, pageIndex);
   if (!info) return;
   if (action === 'add') addPage(info.total);
   if (action === 'remove') removeLastPage(info.total);
@@ -107,7 +122,7 @@ function syncPageNumberControls() {
 
   document.querySelectorAll('.a4-page').forEach(function (pageNode, pageIndex) {
     var pageNumber = pageNode.querySelector('.page-number');
-    var info = getFooterInfo(pageNumber);
+    var info = getFooterInfo(pageNumber, pageIndex);
     if (!info) return;
     var rect = pageNode.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
