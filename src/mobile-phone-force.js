@@ -10,7 +10,8 @@ function applyMobilePhoneForce() {
   var scaledPageHeight = 1123 * mobileScale;
   var pageCount = Math.max(1, document.querySelectorAll('.preview-zone .a4-page').length || document.querySelectorAll('.a4-page').length || 1);
   var gap = 6;
-  var needsVerticalScroll = (pageCount * scaledPageHeight + Math.max(0, pageCount - 1) * gap) > (viewportHeight + 2);
+  var pagesOverflow = (pageCount * scaledPageHeight + Math.max(0, pageCount - 1) * gap) > (viewportHeight + 2);
+  var needsVerticalScroll = pageCount > 1 || pagesOverflow;
   var bottomRoom = needsVerticalScroll ? 40 : 0;
   var sideMargin = Math.max(0, Math.floor((viewportWidth - scaledWidth) / 2));
   var mobileA4Gap = -Math.max(0, Math.round(1123 * (1 - mobileScale) - bottomRoom));
