@@ -260,22 +260,16 @@ function applyMobilePhoneForce() {
 function scheduleMobilePhoneForce() {
   applyMobilePhoneForce();
   requestAnimationFrame(applyMobilePhoneForce);
-  setTimeout(applyMobilePhoneForce, 50);
-  setTimeout(applyMobilePhoneForce, 150);
-  setTimeout(applyMobilePhoneForce, 350);
-  setTimeout(applyMobilePhoneForce, 700);
+  setTimeout(applyMobilePhoneForce, 80);
+  setTimeout(applyMobilePhoneForce, 250);
+  setTimeout(applyMobilePhoneForce, 600);
   setTimeout(applyMobilePhoneForce, 1200);
 }
 
 scheduleMobilePhoneForce();
-setInterval(applyMobilePhoneForce, 800);
+setTimeout(scheduleMobilePhoneForce, 1800);
 window.addEventListener('load', scheduleMobilePhoneForce);
 window.addEventListener('resize', scheduleMobilePhoneForce);
 window.addEventListener('orientationchange', function () {
   setTimeout(scheduleMobilePhoneForce, 80);
 });
-
-var mobileForceObserver = new MutationObserver(function () {
-  scheduleMobilePhoneForce();
-});
-mobileForceObserver.observe(document.documentElement, { childList: true, subtree: true });
