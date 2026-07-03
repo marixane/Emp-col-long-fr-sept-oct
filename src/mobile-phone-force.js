@@ -3,11 +3,20 @@ function applyMobilePhoneForce() {
   if (existing) existing.remove();
 
   var viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+  var viewportHeight = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
   var availableWidth = Math.max(240, viewportWidth - 18);
   var mobileScale = Math.min(1, Math.max(0.32, availableWidth / 794));
   var scaledWidth = Math.ceil(794 * mobileScale);
+  var scaledPageHeight = 1123 * mobileScale;
+  var pageCount = Math.max(1, document.querySelectorAll('.preview-zone .a4-page').length || document.querySelectorAll('.a4-page').length || 1);
+  var gap = 6;
+  var needsVerticalScroll = (pageCount * scaledPageHeight + Math.max(0, pageCount - 1) * gap) > (viewportHeight + 2);
+  var bottomRoom = needsVerticalScroll ? 40 : 0;
   var sideMargin = Math.max(0, Math.floor((viewportWidth - scaledWidth) / 2));
-  var mobileA4Gap = -Math.max(0, Math.round(1123 * (1 - mobileScale) - 40));
+  var mobileA4Gap = -Math.max(0, Math.round(1123 * (1 - mobileScale) - bottomRoom));
+  var previewOverflowY = needsVerticalScroll ? 'auto' : 'hidden';
+  var previewPaddingBottom = needsVerticalScroll ? 40 : 0;
+  var lastPageBottom = needsVerticalScroll ? 40 : 0;
 
   var style = document.createElement('style');
   style.id = 'mobile-phone-force-style';
@@ -200,11 +209,13 @@ function applyMobilePhoneForce() {
         align-items: flex-start !important;
         justify-content: flex-start !important;
         justify-items: start !important;
-        gap: 6px !important;
-        padding: 0 0 40px 0 !important;
+        gap: ${gap}px !important;
+        padding: 0 0 ${previewPaddingBottom}px 0 !important;
         margin: 0 !important;
-        overflow-y: auto !important;
+        overflow-y: ${previewOverflowY} !important;
         overflow-x: hidden !important;
+        overscroll-behavior-y: contain !important;
+        -webkit-overflow-scrolling: touch !important;
         box-sizing: border-box !important;
         background: #e8edf4 !important;
         border-left: 0 !important;
@@ -238,7 +249,7 @@ function applyMobilePhoneForce() {
 
       body .preview-zone .a4-page:last-child,
       body .a4-page:last-child {
-        margin-bottom: 40px !important;
+        margin-bottom: ${lastPageBottom}px !important;
       }
     }
   `;
