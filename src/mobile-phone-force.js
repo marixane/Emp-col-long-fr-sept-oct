@@ -257,17 +257,30 @@ function applyMobilePhoneForce() {
   document.head.appendChild(style);
 }
 
+var lastMobilePageCount = 0;
+var mobileRefreshTimer = null;
+
 function scheduleMobilePhoneForce() {
+  if (mobileRefreshTimer) clearTimeout(mobileRefreshTimer);
   applyMobilePhoneForce();
   requestAnimationFrame(applyMobilePhoneForce);
   setTimeout(applyMobilePhoneForce, 80);
   setTimeout(applyMobilePhoneForce, 250);
   setTimeout(applyMobilePhoneForce, 600);
-  setTimeout(applyMobilePhoneForce, 1200);
+  mobileRefreshTimer = setTimeout(applyMobilePhoneForce, 1200);
+}
+
+function watchMobilePageCount() {
+  var count = document.querySelectorAll('.preview-zone .a4-page').length || document.querySelectorAll('.a4-page').length || 0;
+  if (count !== lastMobilePageCount) {
+    lastMobilePageCount = count;
+    scheduleMobilePhoneForce();
+  }
 }
 
 scheduleMobilePhoneForce();
 setTimeout(scheduleMobilePhoneForce, 1800);
+setInterval(watchMobilePageCount, 300);
 window.addEventListener('load', scheduleMobilePhoneForce);
 window.addEventListener('resize', scheduleMobilePhoneForce);
 window.addEventListener('orientationchange', function () {
