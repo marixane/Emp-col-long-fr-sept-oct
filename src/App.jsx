@@ -3,7 +3,7 @@ import App6 from './App6.jsx';
 import Tab from './Tab.jsx';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('exam');
+  const [activeTab, setActiveTab] = useState('cahier');
 
   return <>
     <nav className="app-tabs">
