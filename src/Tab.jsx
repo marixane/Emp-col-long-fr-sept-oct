@@ -2,10 +2,23 @@ import { useState } from 'react';
 
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
 const HOURS = ['08:00 - 09:00', '09:00 - 10:00', '10:00 - 11:00', '11:00 - 12:00', '12:00 - 13:00', '13:00 - 14:00', '14:00 - 15:00', '15:00 - 16:00', '16:00 - 17:00', '17:00 - 18:00'];
+const CELL_COLORS = ['#fff3bf', '#d8f3dc', '#dbeafe', '#ffe4e6', '#ede9fe', '#cffafe', '#fef3c7', '#dcfce7', '#e0e7ff', '#fce7f3', '#ccfbf1', '#f5f5f4'];
 
 const createCell = () => ({ text: '', room: 1, span: 1, hidden: false });
 const cloneCell = (cell) => ({ ...normalizeCell(cell), hidden: false });
 const clampRoom = (value) => Math.min(Math.max(Number(value) || 1, 1), 80);
+
+const getCellColor = (text) => {
+  const normalized = String(text ?? '').trim().toLowerCase();
+  if (!normalized) return 'white';
+
+  let hash = 0;
+  for (let index = 0; index < normalized.length; index += 1) {
+    hash = (hash * 31 + normalized.charCodeAt(index)) % CELL_COLORS.length;
+  }
+
+  return CELL_COLORS[hash];
+};
 
 const createRows = () => DAYS.map((day) => ({
   day,
@@ -260,7 +273,8 @@ export default function Tab() {
 
                 return <td key={`${hour}-${hourIndex}`} colSpan={cell.span}>
                   <div
-                    className={`timetable-cell-content ${hasClass ? 'draggable-cell clickable-cell' : ''} ${selectedCell === cellKey ? 'selected-cell' : ''} ${canDropHere || dragOverCell === cellKey ? 'drop-ready-cell' : ''}`}
+                    className={`timetable-cell-content ${hasClass ? 'colored-cell draggable-cell clickable-cell' : ''} ${selectedCell === cellKey ? 'selected-cell' : ''} ${canDropHere || dragOverCell === cellKey ? 'drop-ready-cell' : ''}`}
+                    style={hasClass ? { '--cell-color': getCellColor(cell.text) } : undefined}
                     draggable={hasClass}
                     onDragStart={(e) => handleDragStart(e, dayIndex, hourIndex, cell)}
                     onDragEnd={() => {
