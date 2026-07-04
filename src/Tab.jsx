@@ -3,40 +3,61 @@ import { useState } from 'react';
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
 const HOURS = ['08:00 - 09:00', '09:00 - 10:00', '10:00 - 11:00', '11:00 - 12:00', '14:00 - 15:00', '15:00 - 16:00', '16:00 - 17:00', '17:00 - 18:00'];
 
-const createRows = () => HOURS.map((hour) => ({
-  hour,
-  cells: DAYS.reduce((acc, day) => ({ ...acc, [day]: '' }), {})
+const createRows = () => DAYS.map((day) => ({
+  day,
+  cells: HOURS.reduce((acc, hour) => ({ ...acc, [hour]: '' }), {})
 }));
 
 export default function Tab() {
   const [school, setSchool] = useState('Établissement :');
   const [teacher, setTeacher] = useState('Professeur :');
   const [year, setYear] = useState('Année scolaire : 2026 / 2027');
+  const [hours, setHours] = useState(HOURS);
   const [rows, setRows] = useState(createRows);
 
   const updateHour = (index, value) => {
-    setRows((current) => current.map((row, i) => i === index ? { ...row, hour: value } : row));
+    const oldHour = hours[index];
+    setHours((current) => current.map((hour, i) => i === index ? value : hour));
+    setRows((current) => current.map((row) => {
+      const nextCells = { ...row.cells, [value]: row.cells[oldHour] ?? '' };
+      delete nextCells[oldHour];
+      return { ...row, cells: nextCells };
+    }));
   };
 
-  const updateCell = (index, day, value) => {
-    setRows((current) => current.map((row, i) => i === index ? {
+  const updateDay = (index, value) => {
+    setRows((current) => current.map((row, i) => i === index ? { ...row, day: value } : row));
+  };
+
+  const updateCell = (dayIndex, hour, value) => {
+    setRows((current) => current.map((row, i) => i === dayIndex ? {
       ...row,
-      cells: { ...row.cells, [day]: value }
+      cells: { ...row.cells, [hour]: value }
     } : row));
   };
 
-  const addRow = () => {
-    setRows((current) => [...current, {
-      hour: '',
-      cells: DAYS.reduce((acc, day) => ({ ...acc, [day]: '' }), {})
-    }]);
+  const addHour = () => {
+    const newHour = '';
+    setHours((current) => [...current, newHour]);
+    setRows((current) => current.map((row) => ({
+      ...row,
+      cells: { ...row.cells, [newHour]: '' }
+    })));
   };
 
-  const removeRow = () => {
-    setRows((current) => current.length > 1 ? current.slice(0, -1) : current);
+  const removeHour = () => {
+    if (hours.length <= 1) return;
+    const hourToRemove = hours[hours.length - 1];
+    setHours((current) => current.slice(0, -1));
+    setRows((current) => current.map((row) => {
+      const nextCells = { ...row.cells };
+      delete nextCells[hourToRemove];
+      return { ...row, cells: nextCells };
+    }));
   };
 
   const clearTable = () => {
+    setHours(HOURS);
     setRows(createRows());
   };
 
@@ -50,8 +71,8 @@ export default function Tab() {
       <h1>Cahier de texte</h1>
       <p className="intro">Remplis l’emploi du temps, puis imprime la page A4 ou sauvegarde en PDF.</p>
 
-      <button type="button" onClick={addRow}>Ajouter une ligne horaire</button>
-      <button type="button" className="secondary" onClick={removeRow}>Supprimer la dernière ligne</button>
+      <button type="button" onClick={addHour}>Ajouter une colonne horaire</button>
+      <button type="button" className="secondary" onClick={removeHour}>Supprimer la dernière colonne</button>
       <button type="button" className="secondary" onClick={clearTable}>Vider le tableau</button>
       <button type="button" onClick={printPage}>Imprimer / PDF A4</button>
     </section>
@@ -68,21 +89,23 @@ export default function Tab() {
         <table className="timetable-table">
           <thead>
             <tr>
-              <th>Horaire</th>
-              {DAYS.map((day) => <th key={day}>{day}</th>)}
+              <th>Jour</th>
+              {hours.map((hour, index) => <th key={`${hour}-${index}`}>
+                <textarea value={hour} onChange={(e) => updateHour(index, e.target.value)} rows="2" />
+              </th>)}
             </tr>
           </thead>
           <tbody>
-            {rows.map((row, index) => <tr key={index}>
-              <td className="hour-cell">
-                <textarea value={row.hour} onChange={(e) => updateHour(index, e.target.value)} rows="2" />
+            {rows.map((row, dayIndex) => <tr key={dayIndex}>
+              <td className="hour-cell day-cell">
+                <textarea value={row.day} onChange={(e) => updateDay(dayIndex, e.target.value)} rows="2" />
               </td>
-              {DAYS.map((day) => <td key={day}>
+              {hours.map((hour, hourIndex) => <td key={`${hour}-${hourIndex}`}>
                 <textarea
-                  value={row.cells[day]}
-                  onChange={(e) => updateCell(index, day, e.target.value)}
+                  value={row.cells[hour] ?? ''}
+                  onChange={(e) => updateCell(dayIndex, hour, e.target.value)}
                   placeholder="Classe / matière / salle"
-                  rows="3"
+                  rows="4"
                 />
               </td>)}
             </tr>)}
