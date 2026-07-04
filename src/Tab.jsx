@@ -36,47 +36,7 @@ export default function Tab() {
     } : row));
   };
 
-  const addHour = () => {
-    const newHour = '';
-    setHours((current) => [...current, newHour]);
-    setRows((current) => current.map((row) => ({
-      ...row,
-      cells: { ...row.cells, [newHour]: '' }
-    })));
-  };
-
-  const removeHour = () => {
-    if (hours.length <= 1) return;
-    const hourToRemove = hours[hours.length - 1];
-    setHours((current) => current.slice(0, -1));
-    setRows((current) => current.map((row) => {
-      const nextCells = { ...row.cells };
-      delete nextCells[hourToRemove];
-      return { ...row, cells: nextCells };
-    }));
-  };
-
-  const clearTable = () => {
-    setHours(HOURS);
-    setRows(createRows());
-  };
-
-  const printPage = () => {
-    window.print();
-  };
-
-  return <main className="cahier-shell">
-    <section className="cahier-panel no-print">
-      <p className="eyebrow">Tab</p>
-      <h1>Cahier de texte</h1>
-      <p className="intro">Remplis l’emploi du temps, puis imprime la page A4 ou sauvegarde en PDF.</p>
-
-      <button type="button" onClick={addHour}>Ajouter une colonne horaire</button>
-      <button type="button" className="secondary" onClick={removeHour}>Supprimer la dernière colonne</button>
-      <button type="button" className="secondary" onClick={clearTable}>Vider le tableau</button>
-      <button type="button" onClick={printPage}>Imprimer / PDF A4</button>
-    </section>
-
+  return <main className="cahier-shell clean-cahier-shell">
     <section className="cahier-preview-zone">
       <div className="a4-page cahier-page">
         <header className="cahier-header">
