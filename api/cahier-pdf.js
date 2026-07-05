@@ -36,7 +36,7 @@ export default async function handler(req, res) {
     const safeBase = escapeBaseUrl(baseUrl);
     const preparedHtml = `<!doctype html><html><head><base href="${safeBase}/"><meta charset="utf-8"><style>@page{size:A4 portrait;margin:0}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}.cahier-pdf-export-button,.app-tabs,.tab-button,button{display:none!important}.cahier-preview-zone{overflow:visible!important;height:auto!important;max-height:none!important}.a4-page,.cahier-page{break-after:page!important;page-break-after:always!important}</style></head><body>${html}</body></html>`;
 
-    await page.setContent(preparedHtml, { waitUntil: 'networkidle0', timeout: 30000 });
+    await page.setContent(preparedHtml, { waitUntil: 'domcontentloaded', timeout: 45000 });
     await page.evaluate(async () => {
       if (document.fonts?.ready) await document.fonts.ready.catch(() => {});
       window.scrollTo(0, 0);
@@ -55,7 +55,7 @@ export default async function handler(req, res) {
     res.status(200).send(pdf);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: error?.message || 'Erreur génération PDF' });
+    res.status(500).json({ error: String(error?.message || error || 'Erreur génération PDF') });
   } finally {
     if (browser) await browser.close().catch(() => {});
   }
