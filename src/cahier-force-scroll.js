@@ -1,4 +1,13 @@
+const applyCahierButtonOffset = () => {
+  if (document.getElementById('cahier-span-buttons-left-style')) return;
+  const style = document.createElement('style');
+  style.id = 'cahier-span-buttons-left-style';
+  style.textContent = '.cahier-tab-active .timetable-cell-content.colored-cell .span-tools{transform:translateX(-5px)!important;}';
+  document.head.appendChild(style);
+};
+
 const clearCahierForcedScrollLock = () => {
+  applyCahierButtonOffset();
   document.documentElement.style.overflow = '';
   document.documentElement.style.height = '';
   document.body.style.overflow = '';
