@@ -2,6 +2,7 @@ import { useState } from 'react';
 import MoroccoHolidaysPage from './MoroccoHolidaysPage';
 
 const DAYS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
+const CALENDAR_DAYS = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
 const HOURS = ['08:00 - 09:00', '09:00 - 10:00', '10:00 - 11:00', '11:00 - 12:00', '12:00 - 13:00', '13:00 - 14:00', '14:00 - 15:00', '15:00 - 16:00', '16:00 - 17:00', '17:00 - 18:00'];
 const CELL_COLORS = ['#fff3bf', '#d8f3dc', '#dbeafe', '#ffe4e6', '#ede9fe', '#cffafe', '#fef3c7', '#dcfce7', '#e0e7ff', '#fce7f3', '#ccfbf1', '#f5f5f4', '#fbcfe8', '#bfdbfe', '#bbf7d0', '#fed7aa', '#ddd6fe', '#bae6fd', '#fecdd3', '#ccfbf1'];
 const HOMEWORK_COLORS = ['#66c43f', '#b34bd7', '#2f80ed', '#ff3f5f', '#f2994a'];
@@ -9,7 +10,18 @@ const GROUP_COLORS = ['#e0f2fe', '#dcfce7', '#fef3c7', '#fce7f3', '#ede9fe'];
 const GROUP_TITLES = ['Tronc Commun', '1ères Bac', '2ème Bac', 'Autres', 'Autres'];
 const DOT_TEXT = Array.from({ length: 4 }, () => '.'.repeat(74)).join('\n');
 const HOLIDAY_RANGES = [
-  { start: '05/09', end: '06/09', text: 'Vacance : Aïd Al Mawlid Annabaoui' }
+  { start: '05/09', end: '06/09', text: 'Vacance : Aïd Al Mawlid Annabaoui' },
+  { start: '19/10', end: '26/10', text: 'Vacances intermédiaires 1' },
+  { start: '06/11', end: '06/11', text: 'Vacance : Marche Verte' },
+  { start: '18/11', end: '18/11', text: 'Vacance : Fête de l’Indépendance' },
+  { start: '07/12', end: '14/12', text: 'Vacances intermédiaires 2' },
+  { start: '01/01', end: '01/01', text: 'Vacance : Nouvel An' },
+  { start: '11/01', end: '11/01', text: 'Vacance : Manifeste de l’Indépendance' },
+  { start: '14/01', end: '14/01', text: 'Vacance : Nouvel An Amazigh' },
+  { start: '25/01', end: '01/02', text: 'Vacances de mi-année' },
+  { start: '15/03', end: '22/03', text: 'Vacances intermédiaires 3' },
+  { start: '01/05', end: '01/05', text: 'Vacance : Fête du Travail' },
+  { start: '03/05', end: '10/05', text: 'Vacances intermédiaires 4' }
 ];
 const SCHOOL_PROGRESS_FLAGS = [
   { date: '19/10', label: 'Vacances 1' },
@@ -76,16 +88,32 @@ const getSchoolProgressPercent = () => {
   const percent = ((today - start) / (end - start)) * 100;
   return Math.min(100, Math.max(0, Math.round(percent)));
 };
-const getFlagPercent = (dateText) => {
-  const [day, month] = dateText.split('/').map(Number);
+const getMonthDateAsSchoolDate = (monthDate) => {
+  const [day, month] = String(monthDate).split('/').map(Number);
   const startYear = getSchoolStartYear();
-  const flagDate = new Date(month >= 9 ? startYear : startYear + 1, month - 1, day);
+  return new Date(month >= 9 ? startYear : startYear + 1, month - 1, day);
+};
+const getFlagPercent = (dateText) => {
+  const flagDate = getMonthDateAsSchoolDate(dateText);
   const { start, end } = getSchoolProgressBounds();
   return Math.min(100, Math.max(0, ((flagDate - start) / (end - start)) * 100));
 };
 const createRows = () => DAYS.map((day) => ({ day, cells: HOURS.reduce((acc, hour) => ({ ...acc, [hour]: createCell() }), {}) }));
 const getHourStart = (hour) => String(hour ?? '').split('-')[0].trim();
 const getMondayBasedDayIndex = (date) => (date.getDay() + 6) % 7;
+const getDisplayDay = (date, rows) => getMondayBasedDayIndex(date) < rows.length ? String(rows[getMondayBasedDayIndex(date)]?.day || DAYS[getMondayBasedDayIndex(date)]).toUpperCase() : CALENDAR_DAYS[date.getDay()].toUpperCase();
+const formatMonthDate = (date) => `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}`;
+const getSchoolHomeworkDates = () => {
+  const startYear = getSchoolStartYear();
+  const dates = [];
+  const current = new Date(startYear, 8, 1);
+  const end = new Date(startYear + 1, 6, 31);
+  while (current <= end) {
+    dates.push(new Date(current));
+    current.setDate(current.getDate() + 1);
+  }
+  return dates;
+};
 const chunkEntries = (entries, size) => entries.reduce((pages, entry, index) => {
   if (index % size === 0) pages.push([]);
   pages[pages.length - 1].push(entry);
@@ -102,11 +130,10 @@ const getGroupIndex = (className) => {
   const level = getClassLevel(className);
   return level === 'Tronc Commun' ? 0 : level === '1ères Bac' ? 1 : level === '2ème Bac' ? 2 : 3;
 };
-const getDayFromMonthDate = (monthDate) => Number(String(monthDate).split('/')[0]);
 const getHolidayRangeStart = (monthDate) => HOLIDAY_RANGES.find((holiday) => holiday.start === monthDate);
 const isInsideHolidayRangeAfterStart = (monthDate) => HOLIDAY_RANGES.some((holiday) => {
-  const day = getDayFromMonthDate(monthDate);
-  return day > getDayFromMonthDate(holiday.start) && day <= getDayFromMonthDate(holiday.end);
+  const date = getMonthDateAsSchoolDate(monthDate);
+  return date > getMonthDateAsSchoolDate(holiday.start) && date <= getMonthDateAsSchoolDate(holiday.end);
 });
 
 export default function Tab() {
@@ -184,34 +211,34 @@ export default function Tab() {
 
   const groupedHomeworkPages = classGroups.map((group, groupIndex) => {
     const classSet = new Set(group.classes);
-    const entries = Array.from({ length: 30 }, (_, index) => {
-      const date = new Date(getSchoolStartYear(), 8, index + 1);
+    const entries = getSchoolHomeworkDates().map((date) => {
       const dayIndex = getMondayBasedDayIndex(date);
-      if (dayIndex >= rows.length || !classSet.size) return null;
-      const dayNumber = String(index + 1).padStart(2, '0');
-      const monthDate = `${dayNumber}/09`;
+      const monthDate = formatMonthDate(date);
       if (isInsideHolidayRangeAfterStart(monthDate)) return null;
       const holidayRange = getHolidayRangeStart(monthDate);
 
       if (holidayRange) {
         const rangeSessions = [];
-        for (let day = getDayFromMonthDate(holidayRange.start); day <= getDayFromMonthDate(holidayRange.end); day += 1) {
-          const holidayDate = new Date(getSchoolStartYear(), 8, day);
-          const holidayDayIndex = getMondayBasedDayIndex(holidayDate);
-          (sessionsByDay[holidayDayIndex] ?? []).forEach((session) => {
-            if (classSet.has(session.className)) rangeSessions.push(session);
-          });
+        const current = getMonthDateAsSchoolDate(holidayRange.start);
+        const end = getMonthDateAsSchoolDate(holidayRange.end);
+        while (current <= end) {
+          const holidayDayIndex = getMondayBasedDayIndex(current);
+          if (holidayDayIndex < rows.length) {
+            (sessionsByDay[holidayDayIndex] ?? []).forEach((session) => {
+              if (classSet.has(session.className)) rangeSessions.push(session);
+            });
+          }
+          current.setDate(current.getDate() + 1);
         }
         if (!rangeSessions.length) return null;
-        const endDay = getDayFromMonthDate(holidayRange.end);
-        const endDate = new Date(getSchoolStartYear(), 8, endDay);
-        const endDayIndex = getMondayBasedDayIndex(endDate);
-        return { date: `${String(rows[dayIndex]?.day || DAYS[dayIndex]).toUpperCase()} ${holidayRange.start} - ${String(rows[endDayIndex]?.day || DAYS[endDayIndex]).toUpperCase()} ${holidayRange.end}`, sessions: rangeSessions, text: holidayRange.text, isHoliday: true, color: HOMEWORK_COLORS[dayIndex % HOMEWORK_COLORS.length] };
+        const endDate = getMonthDateAsSchoolDate(holidayRange.end);
+        return { date: `${getDisplayDay(date, rows)} ${holidayRange.start} - ${getDisplayDay(endDate, rows)} ${holidayRange.end}`, sessions: rangeSessions, text: holidayRange.text, isHoliday: true, color: HOMEWORK_COLORS[dayIndex % HOMEWORK_COLORS.length] };
       }
 
+      if (dayIndex >= rows.length || !classSet.size) return null;
       const sessions = (sessionsByDay[dayIndex] ?? []).filter((session) => classSet.has(session.className));
       if (!sessions.length) return null;
-      return { date: `${String(rows[dayIndex]?.day || DAYS[dayIndex]).toUpperCase()} ${monthDate}`, sessions, text: DOT_TEXT, isHoliday: false, color: HOMEWORK_COLORS[dayIndex % HOMEWORK_COLORS.length] };
+      return { date: `${getDisplayDay(date, rows)} ${monthDate}`, sessions, text: DOT_TEXT, isHoliday: false, color: HOMEWORK_COLORS[dayIndex % HOMEWORK_COLORS.length] };
     }).filter(Boolean);
 
     return { title: GROUP_TITLES[groupIndex], color: GROUP_COLORS[groupIndex], pages: chunkEntries(entries, 5) };
