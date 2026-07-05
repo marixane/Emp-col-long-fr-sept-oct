@@ -220,6 +220,18 @@ body.cahier-tab-active .cahier-page:not(.homework-page):not(.holidays-page) .tot
   transform: translateX(90px) !important;
 }
 
+body.cahier-tab-active .timetable-table thead th:first-child {
+  color: transparent !important;
+  background: transparent !important;
+  border-top-color: transparent !important;
+  border-left-color: transparent !important;
+}
+
+body.cahier-tab-active .timetable-table thead th:first-child textarea {
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 @media print {
   body.cahier-tab-active .cahier-group-cover-page {
     page-break-after: always !important;
