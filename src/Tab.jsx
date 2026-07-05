@@ -6,9 +6,9 @@ const CELL_COLORS = ['#fff3bf', '#d8f3dc', '#dbeafe', '#ffe4e6', '#ede9fe', '#cf
 const HOMEWORK_ENTRIES = [
   ['LUNDI 15 AVRIL', 'Sciences', 'Regarder attentivement la vidéo : "C\'est quoi un trou noir" puis préparer une question à poser à un camarade.', '#66c43f'],
   ['MARDI 16 AVRIL', 'Français', 'Apprendre la Fable de Jean de la Fontaine "La Cigale et la Fourmi." à partir du cahier multimedia Cahier de Fables', '#b34bd7'],
+  ['MERCREDI 17 AVRIL', '', '', '#2f80ed'],
   ['JEUDI 18 AVRIL', 'Education\ncivique', 'Faire le quizz : Les droits de l\'enfant.', '#ff3f5f'],
-  ['VENDREDI 19 AVRIL', '', '', '#2f80ed'],
-  ['SAMEDI 20 AVRIL', '', '', '#f2994a']
+  ['VENDREDI 19 AVRIL', '', '', '#f2994a']
 ];
 
 const createCell = () => ({ text: '', room: 1, span: 1, hidden: false });
