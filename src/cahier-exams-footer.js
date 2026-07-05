@@ -1,11 +1,11 @@
 const EXAM_ROWS = [
-  ['Primaire', 'Examen normalisé local', '20–24 janvier 2026', 'Examen'],
-  ['Lycée', 'Examen régional 1ère Bac', '29–30 mai 2026', 'Examen'],
-  ['Lycée', 'Examen national 2ème Bac', '01–04 juin 2026', 'Examen'],
-  ['Collège', 'Examen régional', '16–17 juin 2026', 'Examen'],
-  ['Primaire', 'Examen normalisé provincial', '23–24 juin 2026', 'Examen'],
-  ['Lycée', 'Rattrapage 1ère Bac', '03–04 juillet 2026', 'Rattrapage'],
-  ['Lycée', 'Rattrapage 2ème Bac', '06–09 juillet 2026', 'Rattrapage']
+  ['Primaire', 'Examen normalisé local', '18–19 janvier 2027', 'Examen'],
+  ['Lycée', 'Examen régional 1ère Bac', '28–29 mai 2027', 'Examen'],
+  ['Lycée', 'Examen national 2ème Bac', '01–03 juin 2027', 'Examen'],
+  ['Collège', 'Examen régional', '23–24 juin 2027', 'Examen'],
+  ['Primaire', 'Examen normalisé provincial', '25–26 juin 2027', 'Examen'],
+  ['Lycée', 'Rattrapage 1ère Bac', '28–29 juin 2027', 'Rattrapage'],
+  ['Lycée', 'Rattrapage 2ème Bac', '01–03 juillet 2027', 'Rattrapage']
 ];
 
 const makeExamCell = (text, header = false) => {
@@ -30,7 +30,7 @@ const buildExamTable = () => {
 
   const title = document.createElement('div');
   title.className = 'cahier-exams-title';
-  title.textContent = 'Tableau des examens 2025-2026';
+  title.textContent = 'Tableau des examens 2026-2027';
 
   const table = document.createElement('table');
   table.className = 'cahier-exams-table';
