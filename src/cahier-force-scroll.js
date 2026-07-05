@@ -1,33 +1,6 @@
-const applyCahierForceScroll = () => {
-  const isCahier = document.body.classList.contains('cahier-tab-active');
-  const zone = document.querySelector('.cahier-preview-zone');
-  const shell = document.querySelector('.cahier-shell');
-
-  if (!isCahier || !zone) return;
-
-  document.documentElement.style.overflow = 'hidden';
-  document.body.style.overflow = 'hidden';
-  document.body.style.height = '100vh';
-
-  if (shell) {
-    shell.style.height = 'calc(100vh - 54px)';
-    shell.style.maxHeight = 'calc(100vh - 54px)';
-    shell.style.overflow = 'hidden';
-  }
-
-  zone.style.height = 'calc(100vh - 78px)';
-  zone.style.maxHeight = 'calc(100vh - 78px)';
-  zone.style.overflowY = 'auto';
-  zone.style.overflowX = 'auto';
-  zone.style.webkitOverflowScrolling = 'touch';
-  zone.style.paddingBottom = '80px';
-  zone.style.scrollBehavior = 'auto';
-};
-
-const resetCahierForceScroll = () => {
-  if (document.body.classList.contains('cahier-tab-active')) return;
-
+const clearCahierForcedScrollLock = () => {
   document.documentElement.style.overflow = '';
+  document.documentElement.style.height = '';
   document.body.style.overflow = '';
   document.body.style.height = '';
 
@@ -51,23 +24,18 @@ const resetCahierForceScroll = () => {
   }
 };
 
-const runCahierScrollFix = () => {
-  applyCahierForceScroll();
-  resetCahierForceScroll();
-};
-
-const scheduleCahierScrollFix = () => window.requestAnimationFrame(runCahierScrollFix);
+const scheduleClearCahierScrollLock = () => window.requestAnimationFrame(clearCahierForcedScrollLock);
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', scheduleCahierScrollFix, { once: true });
+  document.addEventListener('DOMContentLoaded', scheduleClearCahierScrollLock, { once: true });
 } else {
-  scheduleCahierScrollFix();
+  scheduleClearCahierScrollLock();
 }
 
-window.addEventListener('resize', scheduleCahierScrollFix);
-window.addEventListener('orientationchange', scheduleCahierScrollFix);
+window.addEventListener('resize', scheduleClearCahierScrollLock);
+window.addEventListener('orientationchange', scheduleClearCahierScrollLock);
 
-new MutationObserver(scheduleCahierScrollFix).observe(document.body, {
+new MutationObserver(scheduleClearCahierScrollLock).observe(document.body, {
   childList: true,
   subtree: true,
   attributes: true,
