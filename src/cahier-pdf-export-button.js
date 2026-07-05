@@ -148,12 +148,26 @@ const safeCanvasToImage = (canvas) => {
   catch { return canvas.toDataURL('image/png'); }
 };
 
+const addFailedPage = (pdf, pageNumber, error) => {
+  pdf.setFillColor(255, 255, 255);
+  pdf.rect(0, 0, A4_WIDTH_MM, A4_HEIGHT_MM, 'F');
+  pdf.setTextColor(15, 23, 42);
+  pdf.setFont('helvetica', 'bold');
+  pdf.setFontSize(18);
+  pdf.text(`Page ${pageNumber} non capturée`, 20, 40);
+  pdf.setFont('helvetica', 'normal');
+  pdf.setFontSize(11);
+  pdf.text('Cette page a bloqué la préparation automatique du PDF.', 20, 55);
+  pdf.text(String(error?.message || error || 'Erreur inconnue').slice(0, 120), 20, 68);
+};
+
 const downloadCahierPdf = async (button) => {
   const pages = getCahierPages();
   if (!pages.length) return;
 
   const originalText = button.textContent;
   const stage = makeExportStage();
+  const failedPages = [];
 
   button.disabled = true;
   document.body.classList.add('cahier-pdf-exporting');
@@ -167,15 +181,21 @@ const downloadCahierPdf = async (button) => {
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
 
     for (let index = 0; index < pages.length; index += 1) {
-      setButtonStatus(button, `Préparation ${Math.round((index / pages.length) * 100)}%`);
-      let canvas;
-      try { canvas = await capturePage(pages[index], stage, 1); }
-      catch { canvas = await capturePage(pages[index], stage, 0.72); }
-      const image = safeCanvasToImage(canvas);
+      setButtonStatus(button, `Page ${index + 1}/${pages.length}`);
       if (index > 0) pdf.addPage('a4', 'portrait');
-      pdf.addImage(image, image.startsWith('data:image/png') ? 'PNG' : 'JPEG', 0, 0, A4_WIDTH_MM, A4_HEIGHT_MM, undefined, 'FAST');
-      canvas.width = 1;
-      canvas.height = 1;
+      try {
+        let canvas;
+        try { canvas = await capturePage(pages[index], stage, 1); }
+        catch { canvas = await capturePage(pages[index], stage, 0.72); }
+        const image = safeCanvasToImage(canvas);
+        pdf.addImage(image, image.startsWith('data:image/png') ? 'PNG' : 'JPEG', 0, 0, A4_WIDTH_MM, A4_HEIGHT_MM, undefined, 'FAST');
+        canvas.width = 1;
+        canvas.height = 1;
+      } catch (error) {
+        failedPages.push(index + 1);
+        console.error(`Erreur export page ${index + 1}:`, error);
+        addFailedPage(pdf, index + 1, error);
+      }
       stage.innerHTML = '';
       await wait(150);
     }
@@ -183,11 +203,12 @@ const downloadCahierPdf = async (button) => {
     setButtonStatus(button, 'Téléchargement...');
     await wait(220);
     pdf.save('Cahier-de-texte-2026-2027.pdf');
+    if (failedPages.length) alert(`PDF téléchargé, mais ces pages ont bloqué : ${failedPages.join(', ')}`);
     setButtonStatus(button, 'PDF téléchargé');
     await wait(700);
   } catch (error) {
     console.error('Erreur export PDF cahier:', error);
-    alert(`Erreur PDF : ${error?.message || 'export impossible sur ce navigateur'}`);
+    alert(`Erreur PDF globale : ${error?.message || 'export impossible sur ce navigateur'}`);
   } finally {
     stage.remove();
     document.body.classList.remove('cahier-pdf-exporting');
