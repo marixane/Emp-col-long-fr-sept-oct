@@ -98,5 +98,7 @@ import './cahier-cover-info-panel.js';
 import './cahier-hide-extra-school-year.css';
 import './cahier-exams-footer.css';
 import './cahier-exams-footer.js';
+import './cahier-group-box-polish.css';
+import './cahier-empty-autres-groups.js';
 
 createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);
