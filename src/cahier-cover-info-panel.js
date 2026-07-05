@@ -16,7 +16,7 @@ const getCoverClassColor = (text) => {
 const getCoverHeaderValue = (index, fallback) => {
   const input = document.querySelectorAll('.cahier-header input')[index];
   const value = String(input?.value || '').trim();
-  if (!value || value.endsWith(':')) return fallback;
+  if (!value || value.endsWith(':') || /^Année scolaire\s*:/i.test(value)) return fallback;
   return value.replace(/^Établissement\s*:\s*/i, '').replace(/^Professeur\s*:\s*/i, '').trim() || fallback;
 };
 
@@ -194,12 +194,11 @@ const ensureCoverInfoPanel = () => {
   document.getElementById('cahier-cover-subject-card')?.remove();
   document.getElementById('cahier-cover-classes-card')?.remove();
 
-  const teacherFallback = getCoverHeaderValue(2, '');
   const schoolFallback = getCoverHeaderValue(0, '');
   const classes = getCoverClasses();
 
   cover.append(
-    makeInfoCard({ id: 'cahier-cover-name-card', top: '690px', label: 'Nom :', field: 'name', value: getCoverFieldValue('name', teacherFallback) }),
+    makeInfoCard({ id: 'cahier-cover-name-card', top: '690px', label: 'Nom :', field: 'name', value: getCoverFieldValue('name', '') }),
     makeInfoCard({ id: 'cahier-cover-school-card', top: '746px', label: 'Établissement :', field: 'school', value: getCoverFieldValue('school', schoolFallback) }),
     makeInfoCard({ id: 'cahier-cover-subject-card', top: '802px', label: 'Matière :', field: 'subject', value: getCoverFieldValue('subject', '') }),
     makeClassesCard(classes)
