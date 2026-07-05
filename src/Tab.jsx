@@ -77,6 +77,61 @@ const sessionClassStyle = {
   textTransform: 'uppercase'
 };
 
+const levelGroupsStyle = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(5, 1fr)',
+  gap: '7px',
+  marginTop: '8px'
+};
+
+const levelGroupBoxStyle = {
+  minHeight: '54px',
+  padding: '6px 7px',
+  border: '1.8px solid rgba(17, 17, 17, 0.75)',
+  borderRadius: '10px',
+  background: 'linear-gradient(180deg, rgba(245, 247, 255, 0.95), rgba(255, 255, 255, 0.98))',
+  boxShadow: '0 2px 5px rgba(17, 17, 17, 0.08)',
+  overflow: 'hidden'
+};
+
+const levelGroupTitleStyle = {
+  marginBottom: '5px',
+  color: '#111827',
+  fontSize: '9px',
+  fontWeight: 900,
+  textAlign: 'center',
+  textTransform: 'uppercase',
+  letterSpacing: '0.2px'
+};
+
+const levelGroupClassesStyle = {
+  display: 'flex',
+  flexWrap: 'wrap',
+  justifyContent: 'center',
+  gap: '3px',
+  color: 'rgba(17, 17, 17, 0.42)',
+  fontSize: '8px',
+  fontWeight: 800,
+  lineHeight: 1.1,
+  textAlign: 'center'
+};
+
+const levelChipStyle = {
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  maxWidth: '100%',
+  padding: '2px 5px',
+  borderRadius: '999px',
+  background: 'rgba(37, 99, 235, 0.10)',
+  color: '#1f2937',
+  fontSize: '8px',
+  fontWeight: 900,
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis'
+};
+
 const getCellColor = (text) => {
   const normalized = String(text ?? '').toLowerCase().replace(/[\s-]/g, '').trim();
   if (!normalized) return 'white';
@@ -105,6 +160,15 @@ const chunkEntries = (entries, size) => entries.reduce((pages, entry, index) => 
   pages[pages.length - 1].push(entry);
   return pages;
 }, []);
+const getClassLevel = (className) => {
+  const cleaned = String(className ?? '').trim().replace(/\s+/g, ' ');
+  const normalized = cleaned.toUpperCase().replace(/[\s-]/g, '');
+  const bacMatch = normalized.match(/^([12])BAC/);
+  if (bacMatch) return `${bacMatch[1]}BAC`;
+  const leadingNumber = normalized.match(/^\d+/);
+  if (leadingNumber) return `Niveau ${leadingNumber[0]}`;
+  return 'Autres';
+};
 
 export default function Tab() {
   const [school, setSchool] = useState('Établissement :');
@@ -144,6 +208,20 @@ export default function Tab() {
     }
     return list;
   }, []));
+
+  const groupedClasses = Array.from(rows.reduce((groups, row) => {
+    hours.forEach((hour) => {
+      const cell = normalizeCell(row.cells[hour]);
+      const className = cell.text.trim();
+      if (!cell.hidden && className) {
+        const level = getClassLevel(className);
+        const classes = groups.get(level) ?? [];
+        if (!classes.includes(className)) classes.push(className);
+        groups.set(level, classes);
+      }
+    });
+    return groups;
+  }, new Map()).entries()).slice(0, 5);
 
   const homeworkEntries = Array.from({ length: 30 }, (_, index) => {
     const date = new Date(getSchoolStartYear(), 8, index + 1);
@@ -286,6 +364,17 @@ export default function Tab() {
             })}
           </tr>)}</tbody>
         </table>
+        <div style={levelGroupsStyle}>
+          {Array.from({ length: 5 }, (_, index) => {
+            const group = groupedClasses[index];
+            const title = group?.[0] ?? `Groupe ${index + 1}`;
+            const classes = group?.[1] ?? [];
+            return <div key={title} style={levelGroupBoxStyle} contentEditable suppressContentEditableWarning onKeyDown={validateOnEnter}>
+              <div style={levelGroupTitleStyle}>{title}</div>
+              <div style={levelGroupClassesStyle}>{classes.length ? classes.map((className) => <span key={className} style={levelChipStyle}>{className}</span>) : 'Classes du même niveau'}</div>
+            </div>;
+          })}
+        </div>
         <footer className="cahier-footer"><span>Signature :</span><span>Observations :</span></footer>
       </div>
       {homeworkPages.map((pageEntries, pageIndex) => <div className="a4-page cahier-page homework-page" key={`homework-page-${pageIndex}`}>
