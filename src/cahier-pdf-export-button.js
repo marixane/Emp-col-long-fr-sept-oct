@@ -10,6 +10,15 @@ const PAGE_BATCH_DELAY = 160;
 const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
 const nextFrame = () => new Promise((resolve) => window.requestAnimationFrame(() => resolve()));
 
+const SAFE_STYLE_PROPS = [
+  'display','position','box-sizing','left','top','right','bottom','width','height','min-width','min-height','max-width','max-height',
+  'margin','margin-top','margin-right','margin-bottom','margin-left','padding','padding-top','padding-right','padding-bottom','padding-left',
+  'border','border-top','border-right','border-bottom','border-left','border-radius','border-collapse','border-spacing',
+  'background-color','color','font','font-family','font-size','font-weight','font-style','line-height','letter-spacing','text-align','text-transform','text-decoration',
+  'white-space','overflow','overflow-x','overflow-y','text-overflow','vertical-align','align-items','justify-content','gap','grid-template-columns','grid-template-rows',
+  'flex-direction','flex-wrap','table-layout','opacity','z-index'
+];
+
 const waitForFonts = async () => {
   if (document.fonts?.ready) {
     try { await document.fonts.ready; } catch { /* ignore */ }
@@ -26,34 +35,35 @@ const setButtonStatus = (button, text) => {
 
 const safeSetStyle = (target, prop, value, priority = '') => {
   if (!value) return;
-  if (value.includes('color-mix(') || value.includes('oklch(') || value.includes('lab(') || value.includes('var(')) return;
-  try {
-    target.style.setProperty(prop, value, priority);
-  } catch {
-    // Ignore styles that cannot be copied by Safari/html2canvas.
-  }
+  if (value.includes('color-mix(') || value.includes('oklch(') || value.includes('lab(') || value.includes('var(') || value.includes('paint(')) return;
+  try { target.style.setProperty(prop, value, priority); } catch { /* ignore */ }
 };
 
 const simplifyElementForCanvas = (node) => {
   try {
+    node.removeAttribute('class');
     node.style.animation = 'none';
     node.style.transition = 'none';
     node.style.filter = 'none';
     node.style.backdropFilter = 'none';
     node.style.webkitBackdropFilter = 'none';
+    node.style.transform = 'none';
     node.style.transformStyle = 'flat';
+    node.style.boxShadow = 'none';
+    node.style.textShadow = 'none';
     node.style.contain = 'none';
     node.style.contentVisibility = 'visible';
-  } catch {
-    // ignore
-  }
+  } catch { /* ignore */ }
 };
 
 const copyComputedStyles = (source, target) => {
   const computed = window.getComputedStyle(source);
-  for (let i = 0; i < computed.length; i += 1) {
-    const prop = computed[i];
-    safeSetStyle(target, prop, computed.getPropertyValue(prop), computed.getPropertyPriority(prop));
+  SAFE_STYLE_PROPS.forEach((prop) => safeSetStyle(target, prop, computed.getPropertyValue(prop), computed.getPropertyPriority(prop)));
+
+  const bg = computed.getPropertyValue('background-color');
+  if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
+    target.style.background = bg;
+    target.style.backgroundColor = bg;
   }
 
   simplifyElementForCanvas(target);
@@ -95,23 +105,13 @@ const clonePageForExport = (page, stage) => {
   clone.style.maxWidth = `${width}px`;
   clone.style.maxHeight = `${height}px`;
   clone.style.margin = '0';
-  clone.style.transform = 'none';
   clone.style.opacity = '1';
   clone.style.background = '#ffffff';
   clone.style.backgroundColor = '#ffffff';
   clone.style.webkitPrintColorAdjust = 'exact';
   clone.style.printColorAdjust = 'exact';
 
-  clone.querySelectorAll(`#${PDF_BUTTON_ID}, script, style, link`).forEach((node) => node.remove());
-  clone.querySelectorAll('img').forEach((img) => {
-    try {
-      img.crossOrigin = 'anonymous';
-      if (!img.complete || !img.naturalWidth) img.remove();
-    } catch {
-      img.remove();
-    }
-  });
-
+  clone.querySelectorAll(`#${PDF_BUTTON_ID}, script, style, link, img`).forEach((node) => node.remove());
   stage.innerHTML = '';
   stage.style.width = `${width}px`;
   stage.style.height = `${height}px`;
@@ -119,7 +119,7 @@ const clonePageForExport = (page, stage) => {
   return { clone, width, height };
 };
 
-const capturePage = async (page, stage, scale = 1.15) => {
+const capturePage = async (page, stage, scale = 1) => {
   const { clone, width, height } = clonePageForExport(page, stage);
   await nextFrame();
   await wait(PAGE_BATCH_DELAY);
@@ -127,10 +127,10 @@ const capturePage = async (page, stage, scale = 1.15) => {
   return html2canvas(clone, {
     backgroundColor: '#ffffff',
     scale,
-    useCORS: true,
+    useCORS: false,
     allowTaint: false,
     logging: false,
-    imageTimeout: 10000,
+    imageTimeout: 5000,
     removeContainer: true,
     foreignObjectRendering: false,
     width,
@@ -139,16 +139,13 @@ const capturePage = async (page, stage, scale = 1.15) => {
     windowHeight: height,
     scrollX: 0,
     scrollY: 0,
-    ignoreElements: (element) => element.id === PDF_BUTTON_ID || element.tagName === 'SCRIPT' || element.tagName === 'STYLE' || element.tagName === 'LINK'
+    ignoreElements: (element) => ['SCRIPT','STYLE','LINK','IMG'].includes(element.tagName) || element.id === PDF_BUTTON_ID
   });
 };
 
 const safeCanvasToImage = (canvas) => {
-  try {
-    return canvas.toDataURL('image/jpeg', 0.94);
-  } catch {
-    return canvas.toDataURL('image/png');
-  }
+  try { return canvas.toDataURL('image/jpeg', 0.92); }
+  catch { return canvas.toDataURL('image/png'); }
 };
 
 const downloadCahierPdf = async (button) => {
@@ -170,21 +167,17 @@ const downloadCahierPdf = async (button) => {
     const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4', compress: true });
 
     for (let index = 0; index < pages.length; index += 1) {
-      const percent = Math.round((index / pages.length) * 100);
-      setButtonStatus(button, `Préparation ${percent}%`);
+      setButtonStatus(button, `Préparation ${Math.round((index / pages.length) * 100)}%`);
       let canvas;
-      try {
-        canvas = await capturePage(pages[index], stage, 1.15);
-      } catch {
-        canvas = await capturePage(pages[index], stage, 0.9);
-      }
+      try { canvas = await capturePage(pages[index], stage, 1); }
+      catch { canvas = await capturePage(pages[index], stage, 0.72); }
       const image = safeCanvasToImage(canvas);
       if (index > 0) pdf.addPage('a4', 'portrait');
       pdf.addImage(image, image.startsWith('data:image/png') ? 'PNG' : 'JPEG', 0, 0, A4_WIDTH_MM, A4_HEIGHT_MM, undefined, 'FAST');
       canvas.width = 1;
       canvas.height = 1;
       stage.innerHTML = '';
-      await wait(140);
+      await wait(150);
     }
 
     setButtonStatus(button, 'Téléchargement...');
