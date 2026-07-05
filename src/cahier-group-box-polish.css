@@ -1,0 +1,32 @@
+body.cahier-tab-active .cahier-page:not(.homework-page):not(.holidays-page) > div[style*="grid-template-columns: repeat(5"] > div {
+  min-height: 142px !important;
+  padding: 9px 8px !important;
+  border-radius: 12px !important;
+}
+
+body.cahier-tab-active .cahier-page:not(.homework-page):not(.holidays-page) > div[style*="grid-template-columns: repeat(5"] > div > div:first-child {
+  margin-bottom: 5px !important;
+  font-size: 11px !important;
+}
+
+body.cahier-tab-active .cahier-page:not(.homework-page):not(.holidays-page) > div[style*="grid-template-columns: repeat(5"] > div > div:nth-child(2) {
+  min-height: 84px !important;
+}
+
+body.cahier-tab-active .cahier-empty-other-group {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-color: rgba(17, 17, 17, 0.18) !important;
+}
+
+body.cahier-tab-active .cahier-empty-other-group > div:first-child {
+  color: rgba(17, 24, 39, 0.42) !important;
+}
+
+body.cahier-tab-active .cahier-empty-other-group > div:nth-child(2) {
+  color: transparent !important;
+}
+
+body.cahier-tab-active .cahier-filled-other-group {
+  opacity: 1 !important;
+}
