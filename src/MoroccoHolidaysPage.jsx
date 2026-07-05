@@ -1,19 +1,18 @@
 const HOLIDAYS = [
-  { name: 'Aïd Al Mawlid Annabaoui', date: '05-06/09/2025', days: '2 jours', type: 'Religieuse' },
-  { name: 'Vacances intermédiaires 1', date: '19-26/10/2025', days: '8 jours', type: 'Scolaire' },
-  { name: 'Marche Verte', date: '06/11/2025', days: '1 jour', type: 'Nationale' },
-  { name: 'Fête de l’Indépendance', date: '18/11/2025', days: '1 jour', type: 'Nationale' },
-  { name: 'Vacances intermédiaires 2', date: '07-14/12/2025', days: '8 jours', type: 'Scolaire' },
-  { name: 'Nouvel An', date: '01/01/2026', days: '1 jour', type: 'Nationale' },
-  { name: 'Manifeste de l’Indépendance', date: '11/01/2026', days: '1 jour', type: 'Nationale' },
-  { name: 'Nouvel An Amazigh', date: '14/01/2026', days: '1 jour', type: 'Nationale' },
-  { name: 'Vacances de mi-année', date: '25/01-01/02/2026', days: '8 jours', type: 'Scolaire' },
-  { name: 'Vacances intermédiaires 3', date: '15-22/03/2026', days: '8 jours', type: 'Scolaire' },
-  { name: 'Aïd Al-Fitr', date: 'Selon calendrier hijri', days: '3 à 4 jours', type: 'Religieuse' },
-  { name: 'Fête du Travail', date: '01/05/2026', days: '1 jour', type: 'Nationale' },
-  { name: 'Vacances intermédiaires 4', date: '03-10/05/2026', days: '8 jours', type: 'Scolaire' },
-  { name: 'Aïd Al-Adha', date: 'Selon calendrier hijri', days: '3 à 4 jours', type: 'Religieuse' },
-  { name: '1er Moharram', date: 'Selon calendrier hijri', days: '1 jour', type: 'Religieuse' }
+  { name: 'Vacances intermédiaires 1', date: '18-25/10/2026', days: '8 jours', type: 'Scolaire' },
+  { name: 'Fête de l’Unité', date: '31/10/2026', days: '1 jour', type: 'Nationale' },
+  { name: 'Marche Verte', date: '06/11/2026', days: '1 jour', type: 'Nationale' },
+  { name: 'Fête de l’Indépendance', date: '18/11/2026', days: '1 jour', type: 'Nationale' },
+  { name: 'Vacances intermédiaires 2', date: '06-13/12/2026', days: '8 jours', type: 'Scolaire' },
+  { name: 'Nouvel An', date: '01/01/2027', days: '1 jour', type: 'Nationale' },
+  { name: 'Manifeste de l’Indépendance', date: '11/01/2027', days: '1 jour', type: 'Nationale' },
+  { name: 'Nouvel An Amazigh', date: '14/01/2027', days: '1 jour', type: 'Nationale' },
+  { name: 'Vacances de mi-année', date: '24-31/01/2027', days: '8 jours', type: 'Scolaire' },
+  { name: 'Aïd Al-Fitr', date: '29 Ramadan - 2 Chawwal 1448', days: '3 à 4 jours', type: 'Religieuse' },
+  { name: 'Fête du Travail', date: '01/05/2027', days: '1 jour', type: 'Nationale' },
+  { name: 'Vacances intermédiaires 4', date: '09-16/05/2027', days: '8 jours', type: 'Scolaire' },
+  { name: 'Aïd Al-Adha', date: '09-11 Dhou Al-Hijja 1448', days: '3 jours', type: 'Religieuse' },
+  { name: '1er Moharram', date: '01 Moharram 1449', days: '1 jour', type: 'Religieuse' }
 ];
 
 const pageStyle = {
@@ -112,7 +111,7 @@ export default function MoroccoHolidaysPage() {
   return <div className="a4-page cahier-page holidays-page" style={pageStyle}>
     <header style={headerStyle}>
       <h1 style={titleStyle}>Vacances scolaires</h1>
-      <p style={subtitleStyle}>Éducation nationale marocaine · Année scolaire 2025 / 2026</p>
+      <p style={subtitleStyle}>Éducation nationale marocaine · Année scolaire 2026 / 2027</p>
     </header>
     <table style={tableStyle}>
       <thead><tr><th style={{ ...headCellStyle, borderRadius: '12px 0 0 12px' }}>N°</th><th style={headCellStyle}>Vacance / fête</th><th style={headCellStyle}>Date</th><th style={headCellStyle}>Durée</th><th style={{ ...headCellStyle, borderRadius: '0 12px 12px 0' }}>Type</th></tr></thead>
@@ -124,6 +123,6 @@ export default function MoroccoHolidaysPage() {
         <td style={{ ...cellStyle, borderRight: '1px solid rgba(17,17,17,0.08)', borderRadius: '0 12px 12px 0' }}><span style={{ ...badgeStyle, background: typeColor(holiday.type) }}>{holiday.type}</span></td>
       </tr>)}</tbody>
     </table>
-    <div style={noteStyle}>Les fêtes religieuses peuvent varier selon l’annonce officielle du calendrier hijri.</div>
+    <div style={noteStyle}>Les fêtes religieuses sont gardées selon les dates hijri indiquées dans le PDF officiel.</div>
   </div>;
 }
