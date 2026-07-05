@@ -1,0 +1,10 @@
+body.cahier-tab-active .homework-text.cahier-dotted-locked {
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  cursor: default !important;
+}
+
+body.cahier-tab-active .homework-text.cahier-dotted-locked:focus {
+  outline: none !important;
+}
