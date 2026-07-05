@@ -1,4 +1,6 @@
 import './cahier-calendar-2026-data.js';
+import './cahier-pdf-export-button.css';
+import './cahier-pdf-export-button.js';
 
 const EVENT_FIXES_2026 = [
   ['Vacance religieuse : Aïd Al Mawlid Annabaoui', 'Fête nationale : Fête de l’Unité', 'SAMEDI 31/10'],
