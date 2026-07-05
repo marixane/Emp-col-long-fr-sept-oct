@@ -29,6 +29,8 @@ const YEAR_TEXT_FIXES_2026 = [
   [/2025-2026/g, '2026-2027']
 ];
 
+const GROUP_TITLES_FOR_DEFAULT = ['Tronc Commun', '1ères Bac', '2ème Bac', 'Autres', 'Autres'];
+
 const fixYears2026 = () => {
   document.querySelectorAll('input, h1, h2, h3, div, span, td, th').forEach((node) => {
     if (node.tagName === 'INPUT') {
@@ -62,10 +64,69 @@ const fixCahierDates2026 = () => {
   });
 };
 
+const getTabFiber = () => {
+  const shell = document.querySelector('.cahier-shell');
+  if (!shell) return null;
+  const fiberKey = Object.keys(shell).find((key) => key.startsWith('__reactFiber$') || key.startsWith('__reactInternalInstance$'));
+  let fiber = fiberKey ? shell[fiberKey] : null;
+  while (fiber) {
+    const name = fiber.type?.name || fiber.elementType?.name || '';
+    if (name === 'Tab') return fiber;
+    fiber = fiber.return;
+  }
+  return null;
+};
+
+const getStateHook = (fiber, index) => {
+  let hook = fiber?.memoizedState;
+  for (let i = 0; hook && i < index; i += 1) hook = hook.next;
+  return hook || null;
+};
+
+const getTableClasses = () => {
+  const classes = [];
+  document.querySelectorAll('.timetable-table tbody td[colspan] textarea').forEach((textarea) => {
+    const value = String(textarea.value || textarea.textContent || '').trim();
+    if (value && !classes.includes(value)) classes.push(value);
+  });
+  return classes;
+};
+
+const pushNewClassesToTroncCommun = () => {
+  if (!document.body.classList.contains('cahier-tab-active')) return;
+  const tableClasses = getTableClasses();
+  if (!tableClasses.length) return;
+
+  const fiber = getTabFiber();
+  const manualGroupsHook = getStateHook(fiber, 8);
+  const dispatch = manualGroupsHook?.queue?.dispatch;
+  if (!dispatch) return;
+
+  const currentGroups = Array.isArray(manualGroupsHook.memoizedState) ? manualGroupsHook.memoizedState : GROUP_TITLES_FOR_DEFAULT.map((title) => ({ title, classes: [] }));
+  const nextGroups = GROUP_TITLES_FOR_DEFAULT.map((title, index) => ({
+    title,
+    classes: [...(currentGroups[index]?.classes || [])].filter((className) => tableClasses.includes(className))
+  }));
+
+  let changed = false;
+  tableClasses.forEach((className) => {
+    const alreadyGrouped = nextGroups.some((group) => group.classes.includes(className));
+    if (!alreadyGrouped) {
+      nextGroups[0].classes.push(className);
+      changed = true;
+    }
+  });
+
+  if (changed) dispatch(nextGroups);
+};
+
 let cahierDateFixTimer = 0;
 const scheduleCahierDateFix2026 = () => {
   clearTimeout(cahierDateFixTimer);
-  cahierDateFixTimer = window.setTimeout(fixCahierDates2026, 220);
+  cahierDateFixTimer = window.setTimeout(() => {
+    pushNewClassesToTroncCommun();
+    fixCahierDates2026();
+  }, 220);
 };
 
 if (document.readyState === 'loading') {
