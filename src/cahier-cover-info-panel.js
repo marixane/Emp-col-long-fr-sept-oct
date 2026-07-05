@@ -1,4 +1,6 @@
 const COVER_CLASS_COLORS = ['#fff3bf', '#d8f3dc', '#dbeafe', '#ffe4e6', '#ede9fe', '#cffafe', '#fef3c7', '#dcfce7', '#e0e7ff', '#fce7f3', '#ccfbf1', '#f5f5f4', '#fbcfe8', '#bfdbfe', '#bbf7d0', '#fed7aa', '#ddd6fe', '#bae6fd', '#fecdd3', '#ccfbf1'];
+const COVER_FIELD_VALUES = { name: '', school: '', subject: '' };
+let isEditingCoverField = false;
 
 const getCoverClassColor = (text) => {
   const normalized = String(text ?? '').toLowerCase().replace(/[\s-]/g, '').trim();
@@ -17,6 +19,8 @@ const getCoverHeaderValue = (index, fallback) => {
   if (!value || value.endsWith(':')) return fallback;
   return value.replace(/^Établissement\s*:\s*/i, '').replace(/^Professeur\s*:\s*/i, '').trim() || fallback;
 };
+
+const getCoverFieldValue = (field, fallback) => COVER_FIELD_VALUES[field] || fallback;
 
 const getCoverClasses = () => {
   const classes = [];
@@ -39,7 +43,7 @@ const removeCoverSubtitleText = (cover) => {
   });
 };
 
-const makeInfoCard = ({ id, top, label, value }) => {
+const makeInfoCard = ({ id, top, label, field, value }) => {
   const card = document.createElement('div');
   card.id = id;
   Object.assign(card.style, {
@@ -72,21 +76,37 @@ const makeInfoCard = ({ id, top, label, value }) => {
     color: '#2f241c'
   });
 
-  const valueNode = document.createElement('strong');
-  valueNode.textContent = value;
-  Object.assign(valueNode.style, {
-    minHeight: '24px',
-    paddingBottom: '2px',
+  const input = document.createElement('input');
+  input.value = value;
+  input.placeholder = '........................................';
+  Object.assign(input.style, {
+    width: '100%',
+    minHeight: '26px',
+    padding: '1px 0 3px',
+    border: '0',
     borderBottom: '1px dashed rgba(70,45,25,0.34)',
+    outline: 'none',
+    background: 'transparent',
     fontSize: '16px',
     fontWeight: '800',
     color: '#111827',
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap'
+    fontFamily: 'Arial, sans-serif',
+    boxSizing: 'border-box'
+  });
+  input.addEventListener('focus', () => { isEditingCoverField = true; });
+  input.addEventListener('blur', () => {
+    COVER_FIELD_VALUES[field] = input.value.trim();
+    isEditingCoverField = false;
+  });
+  input.addEventListener('input', () => { COVER_FIELD_VALUES[field] = input.value; });
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      input.blur();
+    }
   });
 
-  card.append(labelNode, valueNode);
+  card.append(labelNode, input);
   return card;
 };
 
@@ -97,8 +117,8 @@ const makeClassesCard = (classes) => {
     position: 'absolute',
     left: '76px',
     right: '76px',
-    top: '820px',
-    minHeight: '90px',
+    top: '872px',
+    minHeight: '80px',
     padding: '12px 16px 14px',
     borderRadius: '18px',
     background: 'rgba(255,255,255,0.56)',
@@ -161,6 +181,7 @@ const makeClassesCard = (classes) => {
 };
 
 const ensureCoverInfoPanel = () => {
+  if (isEditingCoverField) return;
   if (!document.body.classList.contains('cahier-tab-active')) return;
   const cover = document.getElementById('cahier-cover-page');
   if (!cover) return;
@@ -170,15 +191,17 @@ const ensureCoverInfoPanel = () => {
   document.getElementById('cahier-cover-info-panel')?.remove();
   document.getElementById('cahier-cover-name-card')?.remove();
   document.getElementById('cahier-cover-school-card')?.remove();
+  document.getElementById('cahier-cover-subject-card')?.remove();
   document.getElementById('cahier-cover-classes-card')?.remove();
 
-  const teacher = getCoverHeaderValue(2, '........................................');
-  const school = getCoverHeaderValue(0, '........................................');
+  const teacherFallback = getCoverHeaderValue(2, '');
+  const schoolFallback = getCoverHeaderValue(0, '');
   const classes = getCoverClasses();
 
   cover.append(
-    makeInfoCard({ id: 'cahier-cover-name-card', top: '700px', label: 'Nom :', value: teacher }),
-    makeInfoCard({ id: 'cahier-cover-school-card', top: '758px', label: 'Établissement :', value: school }),
+    makeInfoCard({ id: 'cahier-cover-name-card', top: '690px', label: 'Nom :', field: 'name', value: getCoverFieldValue('name', teacherFallback) }),
+    makeInfoCard({ id: 'cahier-cover-school-card', top: '746px', label: 'Établissement :', field: 'school', value: getCoverFieldValue('school', schoolFallback) }),
+    makeInfoCard({ id: 'cahier-cover-subject-card', top: '802px', label: 'Matière :', field: 'subject', value: getCoverFieldValue('subject', '') }),
     makeClassesCard(classes)
   );
 };
