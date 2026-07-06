@@ -29,12 +29,68 @@ const EXPORT_CSS = `
   }
   .a4-page:last-child, .cahier-page:last-child { break-after: auto !important; page-break-after: auto !important; }
   #${PDF_BUTTON_ID}, .app-tabs, .no-print, button { display: none !important; }
+  .homework-subject > div { grid-template-columns: 52px 1fr 34px !important; }
+  .cahier-session-duration { display: inline-block !important; visibility: visible !important; opacity: 1 !important; color: rgba(55,65,81,.9) !important; font-size: 10px !important; font-weight: 900 !important; text-align: right !important; white-space: nowrap !important; }
 `;
+
+const clean = (value) => String(value || '').trim().toUpperCase().replace(/\s+/g, ' ');
+const durationText = (span) => `${Math.max(Number(span) || 1, 1)}h`;
 
 const getCss = () => Array.from(document.styleSheets).map((sheet) => {
   try { return Array.from(sheet.cssRules || []).map((rule) => rule.cssText).join('\n'); }
   catch { return ''; }
 }).filter(Boolean).join('\n');
+
+const getTimetableDurationsForPdf = () => {
+  const map = new Map();
+  const rows = Array.from(document.querySelectorAll('.timetable-table tbody tr'));
+
+  rows.forEach((row) => {
+    const day = clean(row.querySelector('.day-cell textarea')?.value || row.querySelector('.day-cell')?.textContent);
+    let hourIndex = 0;
+
+    Array.from(row.children).slice(1).forEach((cell) => {
+      const text = clean(cell.querySelector('textarea')?.value || cell.textContent);
+      const span = Number(cell.colSpan) || 1;
+      if (!text) {
+        hourIndex += span;
+        return;
+      }
+
+      const header = document.querySelector(`.timetable-table thead th:nth-child(${hourIndex + 2}) textarea`);
+      const hour = clean((header?.value || header?.textContent || '').split('-')[0]);
+      map.set(`${day}|${hour}|${text}`, durationText(span));
+      hourIndex += span;
+    });
+  });
+
+  return map;
+};
+
+const getEntryDayForPdf = (entry) => clean((entry.querySelector('.homework-date')?.textContent || '').split(' ')[0]);
+
+const applySessionDurationsForPdf = (zone) => {
+  const durations = getTimetableDurationsForPdf();
+
+  zone.querySelectorAll('.homework-entry:not(.cahier-extra-holiday-entry):not(.cahier-exam-entry)').forEach((entry) => {
+    const day = getEntryDayForPdf(entry);
+
+    entry.querySelectorAll('.homework-subject > div').forEach((line) => {
+      const spans = line.querySelectorAll('span');
+      const hour = clean(spans[0]?.textContent);
+      const className = clean(spans[1]?.textContent);
+      if (!hour || !className) return;
+
+      let durationNode = line.querySelector('.cahier-session-duration');
+      if (!durationNode) {
+        durationNode = document.createElement('span');
+        durationNode.className = 'cahier-session-duration';
+        line.append(durationNode);
+      }
+      durationNode.textContent = durations.get(`${day}|${hour}|${className}`) || '1h';
+    });
+  });
+};
 
 const firstDateInfo = (text) => {
   const match = String(text || '').match(/(\d{2})\/(\d{2})/);
@@ -147,6 +203,7 @@ const buildExportHtml = () => {
     zone.append(clone);
   });
 
+  applySessionDurationsForPdf(zone);
   removeAfterJuly10(zone);
   appendExitPageForEachGroup(zone);
   ensurePdfIncludesJuly10(zone);
