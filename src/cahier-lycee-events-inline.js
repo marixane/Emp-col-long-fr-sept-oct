@@ -98,6 +98,8 @@ const insertEventInGroupPages = (groupFirstPage, event) => {
 
 const insertLyceeEventsInline = () => {
   document.getElementById('cahier-lycee-events-page')?.remove();
+  document.querySelectorAll('.cahier-cover-level-buttons').forEach((buttons) => buttons.remove());
+
   const groupPages = Array.from(document.querySelectorAll('.homework-page'))
     .filter((page) => !page.previousElementSibling?.classList?.contains('homework-page'));
 
@@ -106,12 +108,16 @@ const insertLyceeEventsInline = () => {
   });
 };
 
+const scheduleLyceeEventsInline = () => window.requestAnimationFrame(insertLyceeEventsInline);
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', scheduleLyceeEventsInline, { once: true });
+} else {
+  scheduleLyceeEventsInline();
+}
+
+document.addEventListener('focusout', scheduleLyceeEventsInline, true);
+document.addEventListener('drop', scheduleLyceeEventsInline, true);
 document.addEventListener('click', (event) => {
-  const button = event.target?.closest?.('.cahier-cover-level-buttons button');
-  if (!button || button.textContent.trim() !== 'Lycée') return;
-  event.preventDefault();
-  event.stopPropagation();
-  event.stopImmediatePropagation();
-  button.parentElement?.querySelectorAll('button').forEach((item) => item.classList.toggle('is-active', item === button));
-  window.requestAnimationFrame(insertLyceeEventsInline);
+  if (event.target?.closest?.('.timetable-table, .span-tools, .cahier-tab')) scheduleLyceeEventsInline();
 }, true);
