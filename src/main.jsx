@@ -89,22 +89,17 @@ import './cahier-texte.css';
 import './cahier-left-margin-100.css';
 import './cahier-top-space-fix.css';
 import './cahier-page-numbers.css';
-import './cahier-cover-zellige-fix.js';
-import './cahier-window-scroll-fix.css';
-import './cahier-force-scroll.js';
 import './cahier-hide-extra-school-year.css';
 import './cahier-group-box-polish.css';
-import './cahier-empty-autres-groups.js';
 import './cahier-fixed-five-entries.css';
 
-// Bouton important de téléchargement PDF uniquement.
-import './cahier-pdf-export-button.js';
-
-// Nettoyage léger : si une date est déjà vacance/examen, on supprime la ligne normale du même jour.
-import './cahier-event-day-clean.js';
-
-// Désactivés pour éviter le blocage quand on ajoute une 2e classe.
-// Ces scripts modifient le DOM après React et se relancent pendant la saisie.
+// RESET STABILITÉ : aucun script DOM cahier pendant la saisie.
+// import './cahier-cover-zellige-fix.js';
+// import './cahier-window-scroll-fix.css';
+// import './cahier-force-scroll.js';
+// import './cahier-empty-autres-groups.js';
+// import './cahier-pdf-export-button.js';
+// import './cahier-event-day-clean.js';
 // import './cahier-cover-page.js';
 // import './cahier-group-cover-pages.js';
 // import './cahier-exams-footer.js';
