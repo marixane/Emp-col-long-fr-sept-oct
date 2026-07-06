@@ -1,0 +1,208 @@
+.cahier-main-cover-page {
+  position: relative !important;
+  overflow: hidden !important;
+  padding: 48px 56px !important;
+  background:
+    radial-gradient(circle at 72% 34%, rgba(245, 158, 11, 0.14), transparent 28%),
+    radial-gradient(circle at 23% 72%, rgba(34, 197, 94, 0.12), transparent 30%),
+    linear-gradient(135deg, #eff6ff 0%, #ffffff 45%, #fefce8 100%) !important;
+  color: #0f172a !important;
+  font-family: Arial, sans-serif !important;
+}
+
+.cahier-cover-top-pattern {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  height: 165px !important;
+  background:
+    linear-gradient(135deg, rgba(14, 165, 233, 0.92), rgba(37, 99, 235, 0.86)),
+    repeating-linear-gradient(45deg, transparent 0 12px, rgba(255,255,255,.22) 12px 14px) !important;
+  border-bottom: 6px solid rgba(217, 119, 6, 0.72) !important;
+  z-index: 0 !important;
+}
+
+.cahier-cover-ministry,
+.cahier-cover-fields-top {
+  position: relative !important;
+  z-index: 2 !important;
+  color: white !important;
+  font-weight: 800 !important;
+}
+
+.cahier-cover-ministry {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
+
+.cahier-cover-emblem {
+  width: 58px !important;
+  height: 58px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 18px !important;
+  background: linear-gradient(135deg, #16a34a, #dc2626) !important;
+  color: #fbbf24 !important;
+  font-size: 30px !important;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.22) !important;
+}
+
+.cahier-cover-fields-top {
+  position: absolute !important;
+  top: 48px !important;
+  right: 54px !important;
+  width: 320px !important;
+  font-size: 13px !important;
+  line-height: 2.05 !important;
+}
+
+.cahier-cover-fields-top span,
+.cahier-cover-info-card span {
+  display: inline-block !important;
+  min-width: 150px !important;
+  border-bottom: 2px dotted currentColor !important;
+  outline: none !important;
+}
+
+.cahier-cover-map-wrap {
+  position: relative !important;
+  z-index: 1 !important;
+  width: 270px !important;
+  height: 320px !important;
+  margin: 112px auto 10px !important;
+  border-radius: 50% !important;
+  background: radial-gradient(circle, #ffffff 0 54%, rgba(255,255,255,0.75) 55% 66%, transparent 67%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  filter: drop-shadow(0 18px 24px rgba(15, 23, 42, 0.16)) !important;
+}
+
+.cahier-cover-map {
+  width: 185px !important;
+  height: 255px !important;
+}
+
+.cahier-cover-map path {
+  fill: #22c55e !important;
+  stroke: #d97706 !important;
+  stroke-width: 7 !important;
+  stroke-linejoin: round !important;
+}
+
+.cahier-cover-map .cahier-cover-sahara {
+  fill: #16a34a !important;
+  opacity: 0.95 !important;
+}
+
+.cahier-cover-star {
+  position: absolute !important;
+  top: 132px !important;
+  left: 120px !important;
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 999px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #dc2626 !important;
+  color: #fef3c7 !important;
+  font-size: 28px !important;
+  box-shadow: 0 8px 18px rgba(220, 38, 38, 0.24) !important;
+}
+
+.cahier-cover-title-block {
+  position: relative !important;
+  z-index: 2 !important;
+  text-align: center !important;
+  margin-top: -8px !important;
+}
+
+.cahier-cover-small-title {
+  color: #d97706 !important;
+  font-size: 28px !important;
+  font-weight: 900 !important;
+}
+
+.cahier-cover-title-block h1 {
+  margin: 0 !important;
+  color: #1d4ed8 !important;
+  font-size: 50px !important;
+  line-height: 0.95 !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+}
+
+.cahier-cover-year {
+  margin-top: 12px !important;
+  display: inline-flex !important;
+  padding: 9px 18px !important;
+  border-radius: 999px !important;
+  background: #fef3c7 !important;
+  color: #92400e !important;
+  font-size: 17px !important;
+  font-weight: 900 !important;
+  border: 1px solid rgba(217, 119, 6, 0.25) !important;
+}
+
+.cahier-cover-info-card,
+.cahier-cover-classes-card {
+  position: relative !important;
+  z-index: 2 !important;
+  margin-top: 22px !important;
+  padding: 18px 22px !important;
+  border-radius: 22px !important;
+  background: rgba(255, 255, 255, 0.86) !important;
+  border: 2px solid rgba(37, 99, 235, 0.13) !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.10) !important;
+}
+
+.cahier-cover-info-card {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 14px !important;
+  font-size: 15px !important;
+  color: #1f2937 !important;
+}
+
+.cahier-cover-info-card strong {
+  color: #0f172a !important;
+  margin-right: 6px !important;
+}
+
+.cahier-cover-classes-title {
+  color: #1d4ed8 !important;
+  font-size: 15px !important;
+  font-weight: 950 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.8px !important;
+  margin-bottom: 12px !important;
+}
+
+.cahier-cover-classes-list {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+.cahier-cover-classes-list span {
+  padding: 7px 12px !important;
+  border-radius: 999px !important;
+  background: linear-gradient(135deg, #dbeafe, #dcfce7) !important;
+  border: 1px solid rgba(37, 99, 235, 0.18) !important;
+  color: #111827 !important;
+  font-size: 13px !important;
+  font-weight: 900 !important;
+  text-transform: uppercase !important;
+}
+
+.cahier-cover-classes-list em {
+  color: #6b7280 !important;
+  font-weight: 800 !important;
+}
