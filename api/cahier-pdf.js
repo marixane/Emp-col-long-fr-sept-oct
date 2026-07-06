@@ -3,16 +3,17 @@ import chromium from '@sparticuz/chromium';
 import puppeteer from 'puppeteer-core';
 
 export const config = {
-  maxDuration: 60,
+  maxDuration: 120,
   api: {
     bodyParser: {
-      sizeLimit: '12mb'
+      sizeLimit: '20mb'
     },
     responseLimit: false
   }
 };
 
-const MAX_HTML_SIZE = 11 * 1024 * 1024;
+const MAX_HTML_SIZE = 18 * 1024 * 1024;
+const LONG_TIMEOUT = 120000;
 const A4_WIDTH = 794;
 const A4_HEIGHT = 1123;
 const A4_WIDTH_CSS = '210mm';
@@ -65,12 +66,14 @@ export default async function handler(req, res) {
       args: getLaunchArgs(),
       defaultViewport: { width: A4_WIDTH, height: A4_HEIGHT, deviceScaleFactor: 1 },
       executablePath: await getExecutablePath(),
-      headless: true
+      headless: true,
+      protocolTimeout: LONG_TIMEOUT
     });
 
     const page = await browser.newPage();
     await page.setViewport({ width: A4_WIDTH, height: A4_HEIGHT, deviceScaleFactor: 1 });
-    page.setDefaultTimeout(45000);
+    page.setDefaultTimeout(LONG_TIMEOUT);
+    page.setDefaultNavigationTimeout(LONG_TIMEOUT);
 
     const safeBase = cleanBaseUrl(baseUrl);
     const documentHtml = `<!doctype html>
@@ -149,19 +152,20 @@ export default async function handler(req, res) {
 </body>
 </html>`;
 
-    await page.setContent(documentHtml, { waitUntil: 'domcontentloaded', timeout: 45000 });
+    await page.setContent(documentHtml, { waitUntil: 'domcontentloaded', timeout: LONG_TIMEOUT });
     await page.evaluate(async () => {
       if (document.fonts?.ready) await document.fonts.ready.catch(() => {});
       window.scrollTo(0, 0);
     });
-    await page.waitForTimeout(500);
+    await page.waitForTimeout(1000);
 
     const pdf = await page.pdf({
       format: 'A4',
       printBackground: true,
       preferCSSPageSize: true,
       margin: { top: '0mm', right: '0mm', bottom: '0mm', left: '0mm' },
-      scale: 1
+      scale: 1,
+      timeout: LONG_TIMEOUT
     });
 
     res.setHeader('Content-Type', 'application/pdf');
