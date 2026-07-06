@@ -1,4 +1,4 @@
-const EXIT_TEXT = 'Le procès-verbal de sortie';
+const EXIT_TEXT = 'La signature de procès-verbal de sortie';
 
 const dateInfo = (text) => {
   const match = String(text || '').match(/(\d{2})\/(\d{2})/);
