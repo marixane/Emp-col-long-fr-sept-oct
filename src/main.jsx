@@ -93,8 +93,9 @@ import './cahier-hide-extra-school-year.css';
 import './cahier-group-box-polish.css';
 import './cahier-fixed-five-entries.css';
 
-// Bouton PDF stable : permanent, devant tout, sans observer lourd.
-import './cahier-pdf-button-stable.js';
+// Bouton PDF Safari-safe : permanent, devant tout, sans mutation DOM web.
+// Il ne modifie les pages qu'au moment de générer le PDF.
+import './cahier-pdf-button-safari-safe.js';
 
 // Désactivé : ce helper DOM faisait buguer l'ajout de plusieurs séances.
 // import './cahier-group-cover-july10-light.js';
