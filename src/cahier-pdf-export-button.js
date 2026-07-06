@@ -17,6 +17,11 @@ const PDF_EXPORT_CSS = `
     background: white !important;
     overflow: visible !important;
   }
+  body.cahier-tab-active #root,
+  body.cahier-tab-active .app-shell,
+  body.cahier-tab-active .cahier-shell,
+  body.cahier-tab-active .clean-cahier-shell,
+  body.cahier-tab-active .cahier-preview-zone,
   #root, .app-shell, .cahier-shell, .clean-cahier-shell, .cahier-preview-zone {
     width: ${A4_WIDTH_CSS} !important;
     min-width: ${A4_WIDTH_CSS} !important;
@@ -29,13 +34,27 @@ const PDF_EXPORT_CSS = `
     overflow: visible !important;
     background: white !important;
     transform: none !important;
+    scale: 1 !important;
+    translate: 0 0 !important;
     zoom: 1 !important;
   }
+  body.cahier-tab-active .cahier-preview-zone,
+  body.cahier-tab-active .preview-zone,
   .cahier-preview-zone {
     display: block !important;
     gap: 0 !important;
+    container-type: normal !important;
   }
-  .a4-page, .cahier-page {
+  body.cahier-tab-active .cahier-preview-zone .a4-page,
+  body.cahier-tab-active .cahier-preview-zone .cahier-page,
+  body.cahier-tab-active .preview-zone .a4-page,
+  body.cahier-tab-active .preview-zone .cahier-page,
+  body .cahier-preview-zone .a4-page,
+  body .cahier-preview-zone .cahier-page,
+  body .preview-zone .a4-page,
+  body .preview-zone .cahier-page,
+  .a4-page,
+  .cahier-page {
     display: block !important;
     position: relative !important;
     width: ${A4_WIDTH_CSS} !important;
@@ -53,6 +72,14 @@ const PDF_EXPORT_CSS = `
     break-after: page !important;
     page-break-after: always !important;
     box-shadow: none !important;
+    flex: none !important;
+  }
+  body.cahier-tab-active .cahier-preview-zone .a4-page::before,
+  body.cahier-tab-active .preview-zone .a4-page::before,
+  body .cahier-preview-zone .a4-page::before,
+  body .preview-zone .a4-page::before {
+    display: none !important;
+    content: none !important;
   }
   .a4-page:last-child, .cahier-page:last-child {
     break-after: auto !important;
@@ -165,12 +192,14 @@ const cloneA4PagesHtml = () => {
     .filter((page) => shouldExportPage(page, filledGroupColors));
 
   const exportZone = document.createElement('div');
-  exportZone.className = 'cahier-preview-zone';
+  exportZone.className = 'cahier-preview-zone preview-zone';
   exportZone.style.setProperty('width', A4_WIDTH_CSS, 'important');
   exportZone.style.setProperty('margin', '0', 'important');
   exportZone.style.setProperty('padding', '0', 'important');
   exportZone.style.setProperty('display', 'block', 'important');
   exportZone.style.setProperty('overflow', 'visible', 'important');
+  exportZone.style.setProperty('transform', 'none', 'important');
+  exportZone.style.setProperty('zoom', '1', 'important');
 
   if (pages.length) {
     pages.forEach((page) => {
