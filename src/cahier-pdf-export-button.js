@@ -2,6 +2,37 @@ const PDF_BUTTON_ID = 'cahier-pdf-export-button';
 
 const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms));
 
+const PDF_EXPORT_CSS = `
+  @page { size: A4 portrait; margin: 0; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  html, body, #root, .app-shell, .cahier-shell, .clean-cahier-shell, .cahier-preview-zone {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    background: white !important;
+  }
+  .cahier-preview-zone {
+    display: block !important;
+    padding: 0 !important;
+  }
+  .a4-page, .cahier-page {
+    display: block !important;
+    position: relative !important;
+    overflow: hidden !important;
+    break-after: page !important;
+    page-break-after: always !important;
+    box-shadow: none !important;
+  }
+  .a4-page:last-child, .cahier-page:last-child {
+    break-after: auto !important;
+    page-break-after: auto !important;
+  }
+  .cahier-pdf-export-button, .app-tabs, .tab-button, button, .no-print {
+    display: none !important;
+  }
+`;
+
 const waitForFonts = async () => {
   if (document.fonts?.ready) {
     try { await document.fonts.ready; } catch { /* ignore */ }
@@ -25,7 +56,7 @@ const getCurrentCssText = () => Array.from(document.styleSheets)
   .join('\n')
   .replace(/<\/style/gi, '<\\/style');
 
-const wrapCssForPdf = (css) => `${'<' + 'style'}>${css}${'<' + '/style'}>`;
+const wrapCssForPdf = (css) => `${'<' + 'style'}>${css}\n${PDF_EXPORT_CSS}${'<' + '/style'}>`;
 const GROUP_COLORS_FOR_PDF = ['#e0f2fe', '#dcfce7', '#fef3c7', '#fce7f3', '#ede9fe'];
 const normalizeText = (text) => String(text || '').replace(/\s+/g, ' ').trim().toLowerCase();
 const normalizeColor = (color) => String(color || '').trim().toLowerCase();
