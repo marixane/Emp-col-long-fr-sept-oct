@@ -7,7 +7,22 @@ const applyCompactTimetableState = (enabled) => {
   });
 };
 
+const placeTotalHoursBelowTimetable = () => {
+  const table = document.querySelector('.timetable-table');
+  const total = document.querySelector('.total-hours-control');
+  if (!table || !total) return;
+
+  const page = table.closest('.cahier-page');
+  if (!page) return;
+
+  if (total.parentElement !== page || table.nextElementSibling !== total) {
+    table.insertAdjacentElement('afterend', total);
+  }
+};
+
 const installCompactTimetableToggle = () => {
+  placeTotalHoursBelowTimetable();
+
   const anchor = document.querySelector('.total-hours-control');
   if (!anchor) return;
 
@@ -31,6 +46,8 @@ const installCompactTimetableToggle = () => {
     });
 
     wrapper.append(checkbox, text);
+    anchor.insertAdjacentElement('afterend', wrapper);
+  } else if (anchor.nextElementSibling !== wrapper) {
     anchor.insertAdjacentElement('afterend', wrapper);
   }
 
