@@ -118,6 +118,7 @@ import './cahier-progress-bar-class.js';
 // import './cahier-pdf-progress-inline.js';
 import './cahier-pdf-class-size-fix.js';
 import './cahier-pdf-fill-pages.css';
+import './cahier-blue-header-compact.css';
 
 // Désactivé : ce helper DOM faisait buguer l'ajout de plusieurs séances.
 // import './cahier-group-cover-july10-light.js';
