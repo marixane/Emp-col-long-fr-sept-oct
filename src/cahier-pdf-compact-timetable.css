@@ -34,29 +34,6 @@
 
   .timetable-table.compact-pdf-hours thead th:nth-child(8),
   .timetable-table.compact-pdf-hours tbody tr > td:nth-child(8) {
-    border-left: 18px solid transparent !important;
-    background-clip: padding-box !important;
-    box-shadow:
-      inset 6px 0 0 #f3f4f6,
-      inset 10px 0 0 #cbd5e1,
-      inset 14px 0 0 #f8fafc !important;
-  }
-
-  .timetable-table.compact-pdf-hours thead th:nth-child(8)::before,
-  .timetable-table.compact-pdf-hours tbody tr > td:nth-child(8)::before {
-    content: '';
-    position: absolute;
-    left: -14px;
-    top: 6px;
-    bottom: 6px;
-    width: 8px;
-    border-radius: 999px;
-    background: linear-gradient(180deg, #e5e7eb 0%, #94a3b8 50%, #e5e7eb 100%);
-    box-shadow: 0 0 0 1px rgba(71, 85, 105, 0.18), 0 1px 3px rgba(15, 23, 42, 0.18);
-  }
-
-  .timetable-table.compact-pdf-hours thead th:nth-child(8),
-  .timetable-table.compact-pdf-hours tbody tr > td:nth-child(8) {
-    position: relative !important;
+    border-left: 4px solid #000 !important;
   }
 }
