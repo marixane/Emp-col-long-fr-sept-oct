@@ -19,6 +19,15 @@
     overflow: hidden !important;
   }
 
+  .homework-page > div:first-child {
+    left: 24mm !important;
+    right: 8mm !important;
+    width: auto !important;
+    max-width: none !important;
+    transform: none !important;
+    box-sizing: border-box !important;
+  }
+
   .homework-page::after {
     content: '' !important;
     display: block !important;
