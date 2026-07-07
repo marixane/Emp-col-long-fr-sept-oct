@@ -1,21 +1,50 @@
-const TITLES = ['1 AC', '2 AC', '3 AC'];
+const REPLACEMENTS = new Map([
+  ['TRONC COMMUN', '1 AC'],
+  ['1ÈRES BAC', '2 AC'],
+  ['1ERES BAC', '2 AC'],
+  ['2ÈME BAC', '3 AC'],
+  ['2EME BAC', '3 AC']
+]);
 
 const applyCollegeTitles = () => {
-  const boxes = document.querySelectorAll('.cahier-page [contenteditable]');
-  let index = 0;
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  let node;
 
-  boxes.forEach((element) => {
-    const text = (element.textContent || '').trim().toUpperCase();
-    if (['TRONC COMMUN', '1ÈRES BAC', '1ERES BAC', '2ÈME BAC', '2EME BAC'].includes(text) && index < TITLES.length) {
-      element.textContent = TITLES[index];
-      index += 1;
-    }
+  while ((node = walker.nextNode())) nodes.push(node);
+
+  nodes.forEach((textNode) => {
+    const parent = textNode.parentElement;
+    if (!parent || ['SCRIPT', 'STYLE'].includes(parent.tagName)) return;
+
+    const current = (textNode.nodeValue || '').trim().toUpperCase();
+    const replacement = REPLACEMENTS.get(current);
+    if (!replacement) return;
+
+    const leading = (textNode.nodeValue || '').match(/^\s*/)?.[0] || '';
+    const trailing = (textNode.nodeValue || '').match(/\s*$/)?.[0] || '';
+    textNode.nodeValue = `${leading}${replacement}${trailing}`;
   });
 };
 
-const observer = new MutationObserver(applyCollegeTitles);
+let scheduled = false;
+const scheduleApply = () => {
+  if (scheduled) return;
+  scheduled = true;
+  requestAnimationFrame(() => {
+    scheduled = false;
+    applyCollegeTitles();
+  });
+};
 
-window.addEventListener('DOMContentLoaded', () => {
-  applyCollegeTitles();
-  observer.observe(document.body, { childList: true, subtree: true });
-});
+const observer = new MutationObserver(scheduleApply);
+
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', () => {
+    scheduleApply();
+    observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+  }, { once: true });
+} else {
+  scheduleApply();
+  observer.observe(document.body, { childList: true, subtree: true, characterData: true });
+}
