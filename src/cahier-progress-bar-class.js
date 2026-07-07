@@ -1,20 +1,25 @@
+const findHomeworkHeader = (page) => {
+  return Array.from(page.querySelectorAll('div')).find((element) => {
+    const style = window.getComputedStyle(element);
+    return style.position === 'absolute'
+      && style.display === 'grid'
+      && style.top === '10px'
+      && style.gridTemplateColumns.startsWith('230px');
+  });
+};
+
 const tagHomeworkProgressBars = () => {
   document.querySelectorAll('.homework-page').forEach((page) => {
-    const header = page.firstElementChild;
-    const progressWrap = header?.children?.[1];
+    const header = findHomeworkHeader(page);
+    if (!header) return;
+
+    const progressWrap = header.children?.[1];
     const progressBar = progressWrap?.children?.[0];
 
-    if (header) {
-      header.classList.add('cahier-homework-header');
-      header.style.height = '30px';
-      header.style.padding = '0 14px';
-      header.style.borderRadius = '10px';
-      header.style.width = '620px';
-      header.style.left = '50%';
-      header.style.right = 'auto';
-      header.style.transform = 'translateX(-50%)';
-      header.style.boxSizing = 'border-box';
-    }
+    header.classList.add('cahier-homework-header');
+    header.style.height = '30px';
+    header.style.padding = '0 14px';
+    header.style.borderRadius = '10px';
 
     if (progressWrap) {
       progressWrap.classList.add('cahier-progress-wrap');
