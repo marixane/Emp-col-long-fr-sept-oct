@@ -85,6 +85,11 @@
   font-size: 12px !important;
 }
 
+.cahier-page > .cahier-exams-list th:nth-child(3) {
+  justify-content: flex-start !important;
+  padding-left: 16px !important;
+}
+
 .cahier-page > .cahier-exams-list th:nth-child(3)::after {
   content: 'ÉVÈNEMENT' !important;
   font-size: 12px !important;
