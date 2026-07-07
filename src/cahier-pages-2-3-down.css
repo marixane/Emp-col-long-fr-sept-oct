@@ -6,7 +6,10 @@
 }
 
 .cahier-exams-groups-page > div[style*="grid-template-columns"] {
-  transform: translateY(100px) !important;
+  position: static !important;
+  clear: both !important;
+  transform: none !important;
+  margin-top: 24px !important;
 }
 
 @media print {
@@ -18,6 +21,9 @@
   }
 
   .cahier-exams-groups-page > div[style*="grid-template-columns"] {
-    transform: translateY(100px) !important;
+    position: static !important;
+    clear: both !important;
+    transform: none !important;
+    margin-top: 24px !important;
   }
 }
