@@ -1,11 +1,15 @@
 .cahier-exams-groups-page {
   position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
   padding: 42px 46px 34px !important;
   overflow: hidden !important;
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
 }
 
 .cahier-exams-groups-main-title {
+  flex: 0 0 auto !important;
   width: fit-content !important;
   margin: 0 auto 18px !important;
   padding: 9px 28px !important;
@@ -19,8 +23,11 @@
 }
 
 .cahier-exams-groups-page .cahier-exams-list {
-  margin-top: 0 !important;
-  margin-bottom: 22px !important;
+  position: static !important;
+  flex: 0 0 auto !important;
+  order: 1 !important;
+  width: 100% !important;
+  margin: 0 0 22px !important;
   border-radius: 20px !important;
   transform: none !important;
 }
@@ -42,10 +49,15 @@
 }
 
 .cahier-exams-groups-page > div[style*="grid-template-columns"] {
+  position: static !important;
+  flex: 0 0 auto !important;
+  order: 2 !important;
   display: grid !important;
   grid-template-columns: repeat(3, 1fr) !important;
   gap: 16px !important;
-  margin-top: 16px !important;
+  width: 100% !important;
+  margin: 0 !important;
+  transform: none !important;
 }
 
 .cahier-exams-groups-page > div[style*="grid-template-columns"] > div {
