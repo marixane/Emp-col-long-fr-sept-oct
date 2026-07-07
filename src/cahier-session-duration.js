@@ -46,7 +46,7 @@ const fitNonHourLabel = (node) => {
 const fitClassLabel = (node) => {
   node.style.setProperty('text-overflow', 'clip', 'important');
   node.style.setProperty('white-space', 'nowrap', 'important');
-  node.style.setProperty('overflow', 'hidden', 'important');
+  node.style.setProperty('overflow', 'visible', 'important');
   node.style.removeProperty('transform');
   node.style.removeProperty('transform-origin');
 
@@ -64,10 +64,11 @@ const fitClassLabel = (node) => {
     node.style.setProperty('font-size', `${size}px`, 'important');
   }
 
-  if (node.scrollWidth > availableWidth && availableWidth > 0) {
-    const scale = Math.max(0.78, availableWidth / node.scrollWidth);
+  if (availableWidth > 0 && node.scrollWidth > 0) {
+    const rawScale = availableWidth / node.scrollWidth;
+    const scale = Math.min(1.8, Math.max(0.78, rawScale));
     node.style.setProperty('transform', `scaleX(${scale})`, 'important');
-    node.style.setProperty('transform-origin', 'left center', 'important');
+    node.style.setProperty('transform-origin', 'center center', 'important');
   }
 };
 
