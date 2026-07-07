@@ -94,6 +94,7 @@ import './cahier-group-box-polish.css';
 import './cahier-fixed-five-entries.css';
 import './cahier-session-fit.css';
 import './cahier-session-duration.js';
+import './cahier-class-label-large.js';
 import './cahier-first-page-clean.css';
 import './cahier-table-exams-polish.css';
 import './cahier-auto-fit-many-classes.css';
