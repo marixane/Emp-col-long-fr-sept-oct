@@ -2,8 +2,8 @@
 .cahier-preview-zone > .a4-page:nth-child(4),
 .cahier-preview-zone > .cahier-page:nth-child(3),
 .cahier-preview-zone > .cahier-page:nth-child(4) {
-  background: linear-gradient(135deg, #fffaf0 0%, #f3e3c3 52%, #e5c99a 100%) !important;
-  background-image: linear-gradient(135deg, #fffaf0 0%, #f3e3c3 52%, #e5c99a 100%) !important;
+  background: linear-gradient(145deg, #ffffff 0%, #fffdf8 28%, #f8f0e3 62%, #ead8bd 100%) !important;
+  background-image: linear-gradient(145deg, #ffffff 0%, #fffdf8 28%, #f8f0e3 62%, #ead8bd 100%) !important;
 }
 
 .cahier-preview-zone > .a4-page:nth-child(3) > *,
@@ -85,8 +85,8 @@
   .cahier-preview-zone > .a4-page:nth-child(4),
   .cahier-preview-zone > .cahier-page:nth-child(3),
   .cahier-preview-zone > .cahier-page:nth-child(4) {
-    background: linear-gradient(135deg, #fffaf0 0%, #f3e3c3 52%, #e5c99a 100%) !important;
-    background-image: linear-gradient(135deg, #fffaf0 0%, #f3e3c3 52%, #e5c99a 100%) !important;
+    background: linear-gradient(145deg, #ffffff 0%, #fffdf8 28%, #f8f0e3 62%, #ead8bd 100%) !important;
+    background-image: linear-gradient(145deg, #ffffff 0%, #fffdf8 28%, #f8f0e3 62%, #ead8bd 100%) !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
