@@ -52,7 +52,7 @@ const fitClassLabel = (node) => {
 
   const line = node.parentElement;
   const classCount = line?.parentElement?.children?.length || 1;
-  const maxSize = classCount >= 4 ? 16 : classCount === 3 ? 18 : 20;
+  const maxSize = classCount >= 4 ? 20 : classCount === 3 ? 24 : 28;
   const minSize = 8;
   const availableWidth = Math.max(node.clientWidth - 2, 0);
 
