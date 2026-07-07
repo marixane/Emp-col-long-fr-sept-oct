@@ -20,53 +20,34 @@ textarea[placeholder="Classe"] {
   padding: 0 4px !important;
   box-sizing: border-box !important;
   font-size: 14px !important;
-  line-height: normal !important;
   text-align: center !important;
-  text-align-last: center !important;
   font-weight: 700 !important;
-  direction: ltr !important;
-  transform: none !important;
 }
 
 input[placeholder="Classe"]::placeholder,
 textarea[placeholder="Classe"]::placeholder {
-  color: transparent !important;
   opacity: 0 !important;
 }
 
 @media print {
-  .homework-page > div:first-child > div:first-child {
-    transform: translateX(100px) !important;
-  }
-
-  *:has(> input[placeholder="Classe"]),
-  *:has(> textarea[placeholder="Classe"]) {
-    position: relative !important;
-    overflow: hidden !important;
-  }
-
   input[placeholder="Classe"],
   textarea[placeholder="Classe"] {
-    position: absolute !important;
-    left: 0 !important;
-    right: 0 !important;
+    position: static !important;
+    display: block !important;
     width: 100% !important;
-    min-width: 0 !important;
     max-width: 100% !important;
     margin: 0 !important;
     padding: 0 4px !important;
     box-sizing: border-box !important;
     font-size: 14px !important;
-    line-height: normal !important;
     text-align: center !important;
-    text-align-last: center !important;
-    direction: ltr !important;
-    transform: none !important;
+    font-weight: 700 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
   input[placeholder="Classe"]::placeholder,
   textarea[placeholder="Classe"]::placeholder {
-    color: transparent !important;
     opacity: 0 !important;
   }
 }
