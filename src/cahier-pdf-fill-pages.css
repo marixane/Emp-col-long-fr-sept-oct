@@ -1,7 +1,7 @@
 @media print {
   .cahier-preview-zone > .a4-page:nth-child(-n+4) > *,
   .cahier-preview-zone > .cahier-page:nth-child(-n+4) > * {
-    transform: translateX(40px) !important;
+    transform: translateX(25px) !important;
   }
 
   .homework-page {
