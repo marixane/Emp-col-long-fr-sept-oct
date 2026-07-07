@@ -1,0 +1,22 @@
+.homework-subject > div,
+.homework-subject:has(> div:nth-child(3)) > div,
+.homework-subject:has(> div:nth-child(4)) > div {
+  grid-template-columns: var(--cahier-hour-width, 66px) minmax(0, 1fr) 16px !important;
+}
+
+.homework-subject:has(> div:nth-child(3)) > div {
+  --cahier-hour-width: 60px;
+}
+
+.homework-subject:has(> div:nth-child(4)) > div {
+  --cahier-hour-width: 52px;
+}
+
+.cahier-session-duration {
+  left: 0 !important;
+  width: 16px !important;
+  justify-self: end !important;
+  padding-left: 1px !important;
+  padding-right: 0 !important;
+  text-align: right !important;
+}
