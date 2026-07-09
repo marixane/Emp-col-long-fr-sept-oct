@@ -29,7 +29,6 @@ function normalizeSchoolCalendarPlugin() {
       if (!id.includes('/src/Tab.jsx')) return null;
 
       const mandatoryEventsPattern = /const MANDATORY_EVENTS = \[[\s\S]*?\n\];/;
-      const examListPattern = /\n\s*<section className="cahier-exams-list"[\s\S]*?<\/section>/;
       const normalizedEvents = `const MANDATORY_EVENTS = [
   { start: '18/10', end: '25/10', label: 'Scolaire', text: 'Vacance scolaire : Vacances intermédiaires 1', type: 'holiday' },
   { start: '31/10', end: '31/10', label: 'Nationale', text: 'Fête nationale : Fête de l’Unité', type: 'holiday' },
@@ -107,11 +106,6 @@ function normalizeSchoolCalendarPlugin() {
         }
         nextCode = nextCode.replace(search, replacement);
       }
-
-      if (!examListPattern.test(nextCode)) {
-        throw new Error('Impossible de retirer la liste des examens de Tab.jsx');
-      }
-      nextCode = nextCode.replace(examListPattern, '');
 
       return { code: nextCode, map: null };
     }
