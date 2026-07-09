@@ -21,18 +21,51 @@ async function findBrowser() {
   throw new Error('Google Chrome, Chromium ou Microsoft Edge est requis pour générer le PDF.');
 }
 
-function removeExamEventsPlugin() {
+function normalizeSchoolCalendarPlugin() {
   return {
-    name: 'remove-exam-events-from-cahier',
+    name: 'normalize-school-calendar-2026-2027',
     enforce: 'pre',
     transform(code, id) {
       if (!id.endsWith('/src/Tab.jsx')) return null;
 
+      const mandatoryEventsPattern = /const MANDATORY_EVENTS = \[[\s\S]*?\n\];/;
       const examListPattern = /\n\s*<section className="cahier-exams-list"[\s\S]*?<\/section>/;
+      const normalizedEvents = `const MANDATORY_EVENTS = [
+  { start: '18/10', end: '25/10', label: 'Scolaire', text: 'Vacance scolaire : Vacances intermédiaires 1', type: 'holiday' },
+  { start: '31/10', end: '31/10', label: 'Nationale', text: 'Fête nationale : Fête de l’Unité', type: 'holiday' },
+  { start: '06/11', end: '06/11', label: 'Nationale', text: 'Fête nationale : Marche Verte', type: 'holiday' },
+  { start: '18/11', end: '18/11', label: 'Nationale', text: 'Fête nationale : Fête de l’Indépendance', type: 'holiday' },
+  { start: '06/12', end: '13/12', label: 'Scolaire', text: 'Vacance scolaire : Vacances intermédiaires 2', type: 'holiday' },
+  { start: '01/01', end: '01/01', label: 'Nationale', text: 'Fête nationale : Nouvel An', type: 'holiday' },
+  { start: '11/01', end: '11/01', label: 'Nationale', text: 'Fête nationale : Manifeste de l’Indépendance', type: 'holiday' },
+  { start: '14/01', end: '14/01', label: 'Nationale', text: 'Fête nationale : Nouvel An Amazigh', type: 'holiday' },
+  { start: '24/01', end: '31/01', label: 'Scolaire', text: 'Vacance scolaire : Vacances de mi-année', type: 'holiday' },
+  { start: '01/05', end: '01/05', label: 'Nationale', text: 'Fête nationale : Fête du Travail', type: 'holiday' },
+  { start: '09/05', end: '16/05', label: 'Scolaire', text: 'Vacance scolaire : Vacances intermédiaires 4', type: 'holiday' }
+];`;
+
+      if (!mandatoryEventsPattern.test(code)) {
+        throw new Error('Impossible de trouver le calendrier obligatoire dans Tab.jsx');
+      }
+
+      let nextCode = code.replace(mandatoryEventsPattern, normalizedEvents);
+
       const replacements = [
         [
           "const EXAM_EVENTS = MANDATORY_EVENTS.filter((event) => event.type === 'exam');",
           'const EXAM_EVENTS = [];'
+        ],
+        [
+          "const getSchoolStartYear = () => {\n  const today = new Date();\n  return today.getMonth() >= 8 ? today.getFullYear() : today.getFullYear() - 1;\n};",
+          'const getSchoolStartYear = () => 2026;'
+        ],
+        [
+          'return { start: new Date(startYear, 8, 1), end: new Date(startYear + 1, 6, 31) };',
+          'return { start: new Date(startYear, 8, 1), end: new Date(startYear + 1, 6, 10) };'
+        ],
+        [
+          'const end = new Date(startYear + 1, 6, 31);',
+          'const end = new Date(startYear + 1, 6, 10);'
         ],
         [
           "const getMandatoryEventStart = (monthDate) => MANDATORY_EVENTS.filter((event) => event.start === monthDate);",
@@ -44,10 +77,9 @@ function removeExamEventsPlugin() {
         ]
       ];
 
-      let nextCode = code;
       for (const [search, replacement] of replacements) {
         if (!nextCode.includes(search)) {
-          throw new Error(`Impossible de nettoyer les examens : motif introuvable dans Tab.jsx`);
+          throw new Error('Impossible d’appliquer une correction du calendrier dans Tab.jsx');
         }
         nextCode = nextCode.replace(search, replacement);
       }
@@ -185,7 +217,7 @@ function pdfApiPlugin() {
 }
 
 export default defineConfig({
-  plugins: [removeExamEventsPlugin(), react(), pdfApiPlugin()],
+  plugins: [normalizeSchoolCalendarPlugin(), react(), pdfApiPlugin()],
   build: {
     target: 'es2017',
     cssTarget: 'safari13'
