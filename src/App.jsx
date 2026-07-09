@@ -14,7 +14,7 @@ export default function App() {
   return <>
     <style>{`
       .timetable-table {
-        transform: translateY(-24px);
+        transform: translateY(-150px);
       }
 
       .cahier-page > div[style*="grid-template-columns: repeat(3, 1fr)"] {
