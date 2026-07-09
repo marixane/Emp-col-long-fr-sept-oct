@@ -69,40 +69,49 @@ function normalizeSchoolCalendarPlugin() {
         [
           "const isInsideMandatoryEventAfterStart = (monthDate) => MANDATORY_EVENTS.some((event) => {\n  const date = getMonthDateAsSchoolDate(monthDate);",
           "const isInsideMandatoryEventAfterStart = (monthDate) => MANDATORY_EVENTS.some((event) => {\n  if (event.type !== 'holiday') return false;\n  const date = getMonthDateAsSchoolDate(monthDate);"
+        ],
+        [
+          'const groupedHomeworkPages = classGroups.map((group, groupIndex) => {',
+          'let groupedHomeworkPages = classGroups.map((group, groupIndex) => {'
+        ],
+        [
+          "  }).filter((group) => group.classes.length > 0 && group.pages.length > 0);",
+          `  }).filter((group) => group.classes.length > 0 && group.pages.length > 0);
+
+  if (groupedHomeworkPages.length) {
+    const lastGroup = groupedHomeworkPages[groupedHomeworkPages.length - 1];
+    const currentEntries = lastGroup.pages.flat().filter((entry) => entry.progressDate !== '10/07');
+    const signatureEntry = {
+      date: 'SAMEDI 10/07/2027',
+      sessions: [{ hour: 'Administration', className: '' }],
+      text: 'Signature procès-verbal',
+      isHoliday: false,
+      isExam: false,
+      isSignature: true,
+      progressDate: '10/07',
+      color: '#8b5cf6',
+      eventKey: 'forced-signature-10-07-2027'
+    };
+    lastGroup.pages = chunkEntries([...currentEntries, signatureEntry], 5);
+  }`
+        ],
+        [
+          "style={entry.isHoliday ? holidayTextStyle : entry.isExam ? examTextStyle : dotTextStyle}",
+          "style={entry.isSignature ? signatureTextStyle : entry.isHoliday ? holidayTextStyle : entry.isExam ? examTextStyle : dotTextStyle}"
         ]
       ];
 
       for (const [search, replacement] of replacements) {
-        if (!nextCode.includes(search)) throw new Error('Impossible d’appliquer une correction du calendrier dans Tab.jsx');
+        if (!nextCode.includes(search)) {
+          throw new Error(`Impossible d’appliquer une correction dans Tab.jsx : ${search.slice(0, 60)}`);
+        }
         nextCode = nextCode.replace(search, replacement);
       }
 
-      if (!examListPattern.test(nextCode)) throw new Error('Impossible de retirer la liste des examens de Tab.jsx');
-      nextCode = nextCode.replace(examListPattern, '');
-
-      const closingPattern = /\n\s*<\/section>\n\s*<\/main>;\n}/;
-      if (!closingPattern.test(nextCode)) {
-        throw new Error('Impossible d’ajouter la page forcée du 10/07 dans Tab.jsx');
+      if (!examListPattern.test(nextCode)) {
+        throw new Error('Impossible de retirer la liste des examens de Tab.jsx');
       }
-
-      const forcedSignaturePage = `
-      <div className="a4-page cahier-page homework-page forced-signature-page" style={{ position: 'relative', paddingTop: '60px', '--group-color': '#ddd6fe' }}>
-        <div style={{ ...groupHomeworkHeaderStyle, background: '#ddd6fe' }}>
-          <div style={groupHomeworkTitleStyle}>Clôture administrative</div>
-          <div style={{ color: '#5b21b6', fontSize: '16px', fontWeight: 900, textAlign: 'right' }}>10/07/2027</div>
-        </div>
-        <section className="homework-entry cahier-extra-holiday-entry" style={{ '--homework-color': '#8b5cf6' }}>
-          <div className="homework-date">SAMEDI 10/07/2027</div>
-          <div className="homework-content">
-            <div className="homework-subject" style={subjectTextStyle}>
-              <div style={sessionLineStyle}><span style={sessionHourStyle}>Administration</span><span style={sessionClassStyle}></span></div>
-            </div>
-            <div className="homework-text" style={signatureTextStyle}>Signature procès-verbal</div>
-          </div>
-        </section>
-      </div>`;
-
-      nextCode = nextCode.replace(closingPattern, `${forcedSignaturePage}\n    </section>\n  </main>;\n}`);
+      nextCode = nextCode.replace(examListPattern, '');
 
       return { code: nextCode, map: null };
     }
