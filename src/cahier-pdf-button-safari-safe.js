@@ -193,12 +193,10 @@ const stretchHomeworkPagesForPdf = (zone) => {
     const headerSpace = 110;
     const bottomSpace = 110;
     const availableHeight = pageHeight - headerSpace - bottomSpace;
-    const entryHeight = Math.floor(availableHeight / entries.length);
+    const entryHeight = Math.floor(availableHeight / 5);
 
-    entries.forEach((entry, index) => {
-      const height = index === entries.length - 1
-        ? availableHeight - entryHeight * (entries.length - 1)
-        : entryHeight;
+    entries.forEach((entry) => {
+      const height = entryHeight;
 
       entry.style.setProperty('height', `${height}px`, 'important');
       entry.style.setProperty('min-height', `${height}px`, 'important');
