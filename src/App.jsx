@@ -11,5 +11,12 @@ export default function App() {
     };
   }, []);
 
-  return <Tab />;
+  return <>
+    <style>{`
+      .timetable-table + div {
+        margin-top: 38px !important;
+      }
+    `}</style>
+    <Tab />
+  </>;
 }
