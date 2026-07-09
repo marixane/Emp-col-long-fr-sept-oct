@@ -14,7 +14,7 @@ export default function App() {
   return <>
     <style>{`
       .cahier-page > div[style*="grid-template-columns: repeat(3, 1fr)"] {
-        margin-top: 48px !important;
+        margin-top: 72px !important;
       }
     `}</style>
     <Tab />
