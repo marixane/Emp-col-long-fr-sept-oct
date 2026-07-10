@@ -1,3 +1,5 @@
+import './cahier-pdf-preview-colleges-v2.js';
+
 const PDF_BUTTON_ID = 'cahier-pdf-button-stable';
 
 const preparePdfClassSizes = () => {
