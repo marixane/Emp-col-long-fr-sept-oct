@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import Tab from './Tab.jsx';
+import CoverPage from './CoverPage.jsx';
 
 const addSchoolYearToDates = () => {
   document.querySelectorAll('.homework-date').forEach((element) => {
@@ -56,6 +57,7 @@ export default function App() {
         margin-top: 96px !important;
       }
     `}</style>
+    <CoverPage />
     <Tab />
   </>;
 }
