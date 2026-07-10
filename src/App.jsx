@@ -53,8 +53,22 @@ export default function App() {
         z-index: 10 !important;
       }
 
+      .cahier-preview-zone > .a4-page.cahier-page:not(.cover-page-only):not(.homework-cover-page):not(.homework-page) {
+        display: flex !important;
+        flex-direction: column !important;
+      }
+
       .cahier-page:not(.cahier-exams-groups-page) > div[style*="grid-template-columns: repeat(3, 1fr)"] {
-        margin-top: 96px !important;
+        order: 1 !important;
+        margin-top: 10px !important;
+      }
+
+      .cahier-page:not(.cahier-exams-groups-page) > .cahier-exams-list {
+        order: 2 !important;
+      }
+
+      .cahier-page:not(.cahier-exams-groups-page) > .cahier-footer {
+        order: 3 !important;
       }
     `}</style>
     <CoverPage />
