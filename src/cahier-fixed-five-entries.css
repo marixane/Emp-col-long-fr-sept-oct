@@ -92,9 +92,9 @@ body.cahier-tab-active .homework-page .homework-text[style*="pre-wrap"] {
   justify-content: flex-start !important;
 }
 
-/* Zone de préparation moderne : trois lignes de petits points ronds.
-   Le libellé masque le début de la première ligne pour que celle-ci commence
-   naturellement juste après « Contenu de la leçon : ». */
+/* Zone de préparation moderne : les petits points ronds remplissent toute la
+   hauteur, avec assez d'espace entre deux lignes pour écrire confortablement.
+   Le nombre de lignes s'adapte automatiquement à la hauteur de la case. */
 body.cahier-tab-active
   .homework-entry:not(.cahier-exam-entry):not(.cahier-extra-holiday-entry)
   .homework-text {
@@ -113,13 +113,10 @@ body.cahier-tab-active
   inset: 0 20px;
   z-index: 0;
   pointer-events: none;
-  background-image:
-    radial-gradient(circle, #aeb2bb 1.15px, transparent 1.35px),
-    radial-gradient(circle, #aeb2bb 1.15px, transparent 1.35px),
-    radial-gradient(circle, #aeb2bb 1.15px, transparent 1.35px);
-  background-position: 0 22%, 0 50%, 0 78%;
-  background-size: 7px 3px, 7px 3px, 7px 3px;
-  background-repeat: repeat-x;
+  background-image: radial-gradient(circle, #aeb2bb 1.15px, transparent 1.35px);
+  background-position: 0 22px;
+  background-size: 7px 28px;
+  background-repeat: repeat;
 }
 
 body.cahier-tab-active
@@ -127,7 +124,7 @@ body.cahier-tab-active
   .homework-text::before {
   content: 'Contenu de la leçon :';
   position: absolute;
-  top: calc(22% - 9px);
+  top: 13px;
   left: 18px;
   z-index: 1;
   padding: 0 9px 0 2px;
