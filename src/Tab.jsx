@@ -354,6 +354,12 @@ export default function Tab({ onClassGroupsChange }) {
       window.requestAnimationFrame(() => window.dispatchEvent(new Event('cahier-pages-generated')));
     });
   };
+
+  useEffect(() => {
+    const generateForPdf = () => generatePages();
+    window.addEventListener('cahier-request-generate-pages', generateForPdf);
+    return () => window.removeEventListener('cahier-request-generate-pages', generateForPdf);
+  });
   const generatedRows = generatedData?.rows ?? [];
   const generatedHours = generatedData?.hours ?? [];
   const generatedClassGroups = generatedData?.classGroups ?? [];
@@ -668,6 +674,5 @@ export default function Tab({ onClassGroupsChange }) {
         <option value={2}>2 Ligne par page</option>
       </select>
     </label>
-    <button type="button" className="cahier-generate-pages-button no-print" onClick={generatePages}>Générer les pages</button>
   </main>;
 }
